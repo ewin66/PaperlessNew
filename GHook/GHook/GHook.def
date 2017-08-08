@@ -1,0 +1,8 @@
+LIBRARY "GHook"
+
+EXPORTS
+	SetGHook_KEYBOARD		@1
+	FreeGHook_KEYBOARD		@2
+	SetCombKey				@3
+	SetXCombKey				@4
+	SetHWndAndMsgType       @5

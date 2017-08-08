@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\GHook">
+      <UniqueIdentifier>{2d15affb-a977-4743-b3ea-c3453d42095e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{691b54aa-e53d-471d-b047-23c7a9a11ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{6e0e5831-b32a-425b-8204-2c1cefec6efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Curl">
+      <UniqueIdentifier>{acb43939-4d81-497a-991b-81086448dd8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Json">
+      <UniqueIdentifier>{e08b1330-ae81-4c2e-9d22-ac965907db97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Json">
+      <UniqueIdentifier>{98652f42-c871-4537-bc4c-fe8104120a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Centerm">
+      <UniqueIdentifier>{a328755c-93e2-418f-9457-b2f0fec17388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\opencv">
+      <UniqueIdentifier>{b1356333-23fc-4b37-8449-873234d9291d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\opencv">
+      <UniqueIdentifier>{d268f5a6-1f39-41d4-aa59-252993662ed5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\Paperless.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Paperless.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\arrow_m.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\size2_r.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\size1_r.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\move_r.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\size3_r.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\size4_r.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\back.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\bitmap2.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Curl\curlbuild.h.cmake">
+      <Filter>Header Files\Curl</Filter>
+    </None>
+    <None Include="Curl\curlbuild.h.in">
+      <Filter>Header Files\Curl</Filter>
+    </None>
+    <None Include="Curl\Makefile.am">
+      <Filter>Header Files\Curl</Filter>
+    </None>
+    <None Include="Curl\Makefile.in">
+      <Filter>Header Files\Curl</Filter>
+    </None>
+    <None Include="Json\json_internalarray.inl">
+      <Filter>Header Files\Json</Filter>
+    </None>
+    <None Include="Json\json_internalmap.inl">
+      <Filter>Header Files\Json</Filter>
+    </None>
+    <None Include="Json\json_valueiterator.inl">
+      <Filter>Header Files\Json</Filter>
+    </None>
+    <None Include="..\Debug\PaperlessWelcome.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Paperless.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PaperlessDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GHook\GHook.h">
+      <Filter>Header Files\GHook</Filter>
+    </ClInclude>
+    <ClInclude Include="MyTTrace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManualInputDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\HttpComm.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="CBase64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\curl.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\curlbuild.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\curlrules.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\curlver.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\easy.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\mprintf.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\multi.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\stdcheaders.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Curl\typecheck-gcc.h">
+      <Filter>Header Files\Curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\autolink.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\config.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\features.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\forwards.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\json.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\json_batchallocator.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\reader.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\value.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\writer.h">
+      <Filter>Header Files\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenshotDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyEdit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyTracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CBaseReadIDCard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Centerm\CENT_IDCard.h">
+      <Filter>Header Files\Centerm</Filter>
+    </ClInclude>
+    <ClInclude Include="Centerm\CTCamera.h">
+      <Filter>Header Files\Centerm</Filter>
+    </ClInclude>
+    <ClInclude Include="Centerm\GlobalDef.h">
+      <Filter>Header Files\Centerm</Filter>
+    </ClInclude>
+    <ClInclude Include="Centerm\HighCameraIF.h">
+      <Filter>Header Files\Centerm</Filter>
+    </ClInclude>
+    <ClInclude Include="Centerm\IDCardDef.h">
+      <Filter>Header Files\Centerm</Filter>
+    </ClInclude>
+    <ClInclude Include="Centerm\PrjDef.h">
+      <Filter>Header Files\Centerm</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\iocp.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\PrintMsgDef.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\singlelist.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="CCentOneCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCentOneReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCentReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CentermIFImp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CGeitCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opencv\OpencvUtils.h">
+      <Filter>Header Files\opencv</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\SocketComm.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Paperless.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PaperlessDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyTTrace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ManualInputDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\HttpComm.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="CBase64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\json_reader.cpp">
+      <Filter>Source Files\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\json_value.cpp">
+      <Filter>Source Files\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\json_writer.cpp">
+      <Filter>Source Files\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenshotDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyTracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CBaseReadIDCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\iocp.c">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="CCentOneCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCentOneReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCentReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CentermIFImp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CGeitCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opencv\OpencvUtils.cpp">
+      <Filter>Source Files\opencv</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\SocketComm.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Paperless.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

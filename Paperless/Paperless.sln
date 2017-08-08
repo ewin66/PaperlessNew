@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Paperless", "Paperless\Paperless.vcxproj", "{47C8B579-4023-41B9-A07F-770BAD8F5671}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GHook", "..\GHook\GHook\GHook.vcxproj", "{81BCE66F-899B-4884-8407-90C128D5FD29}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PaperlessPrepare", "..\PaperlessPrepare\PaperlessPrepare\PaperlessPrepare.vcxproj", "{7D138158-3ABE-4BA2-B430-0669FB1101DF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PaperlessRestart", "..\PaperlessRestart\PaperlessRestart.vcxproj", "{335A669E-A830-4F1A-917B-09873F14811F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47C8B579-4023-41B9-A07F-770BAD8F5671}.Debug|Win32.ActiveCfg = Debug|Win32
+		{47C8B579-4023-41B9-A07F-770BAD8F5671}.Debug|Win32.Build.0 = Debug|Win32
+		{47C8B579-4023-41B9-A07F-770BAD8F5671}.Release|Win32.ActiveCfg = Release|Win32
+		{47C8B579-4023-41B9-A07F-770BAD8F5671}.Release|Win32.Build.0 = Release|Win32
+		{81BCE66F-899B-4884-8407-90C128D5FD29}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81BCE66F-899B-4884-8407-90C128D5FD29}.Debug|Win32.Build.0 = Debug|Win32
+		{81BCE66F-899B-4884-8407-90C128D5FD29}.Release|Win32.ActiveCfg = Release|Win32
+		{81BCE66F-899B-4884-8407-90C128D5FD29}.Release|Win32.Build.0 = Release|Win32
+		{7D138158-3ABE-4BA2-B430-0669FB1101DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D138158-3ABE-4BA2-B430-0669FB1101DF}.Debug|Win32.Build.0 = Debug|Win32
+		{7D138158-3ABE-4BA2-B430-0669FB1101DF}.Release|Win32.ActiveCfg = Release|Win32
+		{7D138158-3ABE-4BA2-B430-0669FB1101DF}.Release|Win32.Build.0 = Release|Win32
+		{335A669E-A830-4F1A-917B-09873F14811F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{335A669E-A830-4F1A-917B-09873F14811F}.Debug|Win32.Build.0 = Debug|Win32
+		{335A669E-A830-4F1A-917B-09873F14811F}.Release|Win32.ActiveCfg = Release|Win32
+		{335A669E-A830-4F1A-917B-09873F14811F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

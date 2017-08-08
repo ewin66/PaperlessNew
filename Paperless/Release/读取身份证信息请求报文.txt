@@ -1,0 +1,23 @@
+IDInfo:
+{"BWKZLX":"1", "JYDM":"101010"}
+eyJCV0taTFgiOiIxIiwgIkpZRE0iOiIxMDEwMTAifQ==
+IDFrontPic:
+{"BWKZLX":"2", "JYDM":"101010"}
+eyJCV0taTFgiOiIyIiwgIkpZRE0iOiIxMDEwMTAifQ==
+IDBackPic:
+{"BWKZLX":"3", "JYDM":"101010"}
+eyJCV0taTFgiOiIzIiwgIkpZRE0iOiIxMDEwMTAifQ==
+IDEnvPic:
+{"BWKZLX":"4", "JYDM":"101010"}
+eyJCV0taTFgiOiI0IiwgIkpZRE0iOiIxMDEwMTAifQ==
+IDEnvPic2:
+{"BWKZLX":"5", "JYDM":"101010", "FILE_NAME":"EnvPictureTmp.jpg"}
+eyJCV0taTFgiOiI1IiwgIkpZRE0iOiIxMDEwMTAiLCAiRklMRV9OQU1FIjoiRW52UGljdHVyZVRtcC5qcGcifQ==
+
+45 * 1024
+46 * 1024
+
+35136
+
+..\Heads;..\Heads\cent\;$(IncludePath)
+..\Lib;$(LibraryPath)
