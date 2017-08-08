@@ -204,28 +204,6 @@ int CPaperlessDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 }
 
 
-typedef struct S_WNDINFO
-{
-	DWORD dwProcessId;
-	HWND hWnd;
-}WNDINFO, *LPWNDINFO;
-BOOL CALLBACK MyEnumProc(HWND hwnd, LPARAM lParam)
-{
-	DWORD dwProcessId;
-	GetWindowThreadProcessId(hwnd, &dwProcessId);
-	LPWNDINFO pInfo = (LPWNDINFO)lParam;
-	char buf[256]; 
-	GetWindowText(hwnd, buf, sizeof(buf)); 
-	GtWriteTrace(30, "%s:%d: 查找ID: %ld, 此ID: %ld, 名称: %s", __FUNCTION__, __LINE__,
-		pInfo->dwProcessId, dwProcessId, buf);
-	if (pInfo->dwProcessId == dwProcessId)
-	{
-		GtWriteTrace(30, "%s:%d: +++++++++++++++++找到窗口++++++++++++++++++", __FUNCTION__, __LINE__);
-		return false;
-	}
-	return true;
-}
-
 // 
 BOOL CPaperlessDlg::OnInitDialog()
 {
@@ -244,43 +222,6 @@ BOOL CPaperlessDlg::OnInitDialog()
 	/************* 从配置文件中恢复上次退出窗口位置 ***************/ 
 	InitFrmPosFromFile();
 
-//	ShellExecute(NULL, _T("open"), _T("IExplore.exe"), _T("http://www.baidu.com/"), NULL, SW_SHOWNORMAL);
-	STARTUPINFO si = { sizeof(si) }; 
-	PROCESS_INFORMATION pi; 
-
-	si.dwFlags = STARTF_USESHOWWINDOW; 
-	si.wShowWindow = TRUE; //TRUE表示显示创建的进程的窗口
-	BOOL bRet = ::CreateProcess ( 
-		NULL,
-		TEXT("c://program files//internet explorer//iexplore.exe http://www.baidu.com"), //在Unicode版本中此参数不能为常量字符串，因为此参数会被修改	 
-		NULL, 
-		NULL, 
-		FALSE, 
-		CREATE_NEW_CONSOLE, 
-		NULL, 
-		NULL, 
-		&si, 
-		&pi); 
-
-	int error = GetLastError();
-	if(bRet) 
-	{
-		WNDINFO wi;
-		GtWriteTrace(30, "%s:%d: 新进程的进程ID号：%ld!", __FUNCTION__, __LINE__, pi.dwProcessId);
-		GtWriteTrace(30, "%s:%d: 新进程的主线程ID号：%ld!", __FUNCTION__, __LINE__, pi.dwThreadId);
-		wi.dwProcessId = pi.dwProcessId;
-		wi.hWnd = NULL;
-		// 等待新进程初始化完毕
-		WaitForInputIdle(pi.hProcess, 5000);
-		EnumWindows(MyEnumProc, (LPARAM)&wi);
-
-		::CloseHandle (pi.hThread); 
-		::CloseHandle (pi.hProcess); 
-	} 
-	else
-	{
-		GtWriteTrace(30, "%s:%d: error code:%d!", __FUNCTION__, __LINE__, error);
-	}
 	// 除非将焦点设置到控件，否则返回 TRUE
 	return TRUE;
 }

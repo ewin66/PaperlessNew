@@ -211,30 +211,15 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 			}
 			else if (0 == tran_type.compare("4"))
 			{
-				// 获取 环境摄像头人像照，返回本地人像照绝对路径
-				int nRet = 0;
+				// 获取 环境摄像头人像照
+				int nRet = 0; 
 				CString str = GetAppPath();
 				str.Append("\\IDPicture\\EnvPictureTmp.jpg");
 				nRet = pPaperlessDlg->pBaseSaveCameraPic->MySaveEnvPic(str.GetBuffer());
 				//nRet = 0;
 				GtWriteTrace(EM_TraceDebug, "[MainFrm]Save file [%s] return = [%d]", str.GetBuffer(), nRet);
-				// 通过 环境摄像头本地路径和返回值拼json报文
-				getJsonFromPersonPic(msgStr_json_rtn, str, nRet);
-				// 将json报文发送
-				SendJsonMsg(msgStr_json_rtn, pOpKey);
-			}
-			else if (0 == tran_type.compare("5"))
-			{
-				// 获取 通过web请求的人像名称，返回人像照
-				std::string sFileName = value["FILE_NAME"].asString();
-				int nRet = 0;
-				CString str = GetAppPath();
-				str.Append("\\IDPicture\\");
-				str.Append(sFileName.c_str());
-				//nRet = 0;
-				GtWriteTrace(EM_TraceDebug, "[MainFrm]Save file [%s] return = [%d]", str.GetBuffer(), nRet);
-				// 通过 环境摄像头照片，拼json报文
-				getJsonFromPic(msgStr_json_rtn, str);
+				// 通过 环境摄像头信息返回值拼json报文
+				getIDPicJson(msgStr_json_rtn, 2, str, nRet);
 				// 将json报文发送
 				SendJsonMsg(msgStr_json_rtn, pOpKey);
 			}
@@ -439,7 +424,7 @@ void getIDCardInfoJson(Json::Value &jsonBuff, CString strDir, MYPERSONINFO *pPer
  * 入参：flag 0-正面 1-反面
  *		strDir 照片本地路径
  *		nRet 调本函数之前，保存身份图片是否成功
- *		jsonBuff：返回报文 
+ * 出参：jsonBuff：返回报文 
 */ 
 void getIDPicJson(Json::Value &jsonBuff, int flag, CString strDir, int nRet)
 {
@@ -461,8 +446,8 @@ void getIDPicJson(Json::Value &jsonBuff, int flag, CString strDir, int nRet)
 	case 1:
 		strncpy(PIC_FLAG, "BACK_PIC", sizeof(PIC_FLAG)-1);
 		break;
-	default:
-		strncpy(PIC_FLAG, "ERROR", sizeof(PIC_FLAG)-1);
+	case 2:
+		strncpy(PIC_FLAG, "LIVE_PIC", sizeof(PIC_FLAG)-1);
 		break;
 	}
 	// 判断 高拍仪获取图片是否成功，不成功返回失败
@@ -527,116 +512,6 @@ void getIDPicJson(Json::Value &jsonBuff, int flag, CString strDir, int nRet)
 		ReadPicCodeTrans(nRet, sRetCode, sRetMsg);
 		jsonBuff[PIC_FLAG] = "";
 	}
-	jsonBuff["XYM"] = sRetCode;
-	jsonBuff["XYSM"] = sRetMsg;
-	jsonBuff["OTH_MSG1"] = "";
-	return ;
-}
-
-
-/* 功能：通过人像照片组返回报文
- * 入参：strDir 照片本地路径
- *		nRet 调本函数之前，保存人像照是否成功
- *		jsonBuff：返回报文 
-*/ 
-void getJsonFromPersonPic(Json::Value &jsonBuff, CString strDir, int nRet)
-{
-	// 获取身份证正面照
-	FILE * pFile= NULL;
-	char *fileBuffer = NULL;
-	long lSize = 0;
-	ZBase64 zBase;
-	string encodeBase64_pic;
-	size_t result = 0;
-	char sRetCode[4+1] = {0};
-	char sRetMsg[128+1] = {0};
-	char PIC_FLAG[16] = {0};
-	// 判断 高拍仪获取图片是否成功，不成功返回失败
-	if (nRet == 0)
-	{
-		jsonBuff["FILE_DIR"] = strDir.GetBuffer();
-	}
-	else
-	{
-		jsonBuff["FILE_DIR"] = "";
-	}
-	// 响应码转换
-	ReadPicCodeTrans(nRet, sRetCode, sRetMsg);
-	jsonBuff["XYM"] = sRetCode;
-	jsonBuff["XYSM"] = sRetMsg;
-	jsonBuff["OTH_MSG1"] = "";
-	return ;
-}
-
-
-/* 功能：通过人像照片组返回报文
- * 入参：strDir 照片本地绝对路径
- *		jsonBuff：返回报文 
-*/ 
-void getJsonFromPic(Json::Value &jsonBuff, CString strDir)
-{
-	// 获取身份证正面照
-	FILE * pFile= NULL;
-	char *fileBuffer = NULL;
-	long lSize = 0;
-	ZBase64 zBase;
-	string encodeBase64_pic;
-	size_t result = 0;
-	char sRetCode[4+1] = {0};
-	char sRetMsg[128+1] = {0};
-	int nRet = 0;
-	do 
-	{
-		pFile = fopen (strDir.GetBuffer(strDir.GetLength()), "rb");
-		strDir.ReleaseBuffer();
-		if (pFile == NULL)
-		{
-			GtWriteTrace(EM_TraceDebug, "[MainFrm]getIDPicJson() open [%s] failed! err=[%d][%s]", strDir.GetBuffer(), errno, strerror(errno));
-			nRet = 101;
-			jsonBuff["FRONT_PIC"] = "";
-			break;
-		}
-		fseek (pFile, 0, SEEK_END);
-		lSize = ftell(pFile);
-		rewind (pFile);
-		// 分配内存存储整个文件
-		fileBuffer = (char*) malloc(sizeof(char) * lSize);
-		if (fileBuffer == NULL)
-		{
-			GtWriteTrace(EM_TraceDebug, "[MainFrm]getIDPicJson() malloc failed! err=[%d][%s]", errno, strerror(errno));
-			nRet = 103;
-			jsonBuff["FRONT_PIC"] = "";
-			// 关闭文件
-			fclose(pFile);
-			pFile = NULL;
-			break;
-		}
-		// 将文件拷贝到fileBuffer中
-		result = fread(fileBuffer, 1, lSize, pFile);
-		if (result != lSize)
-		{
-			GtWriteTrace(EM_TraceDebug, "[MainFrm]getIDPicJson() read [%s] failed! err=[%d][%s]", strDir.GetBuffer(), errno, strerror(errno));
-			nRet = 102;
-			jsonBuff["FRONT_PIC"] = "";
-			// 关闭文件，释放内存
-			fclose(pFile);
-			pFile = NULL;
-			free(fileBuffer);
-			fileBuffer = NULL;
-			break;
-		}
-		// 读取身份证正面照文件成功，进行base64编码
-		encodeBase64_pic = zBase.Encode((const unsigned char*)fileBuffer, (int)lSize);
-		// 释放内存
-		free(fileBuffer);
-		fileBuffer = NULL;
-		fclose(pFile);
-		pFile = NULL;
-		jsonBuff["FRONT_PIC"] = encodeBase64_pic.c_str();
-		//GtWriteTrace(EM_TraceDebug, "[MainFrm]file buff=[%s]", encodeBase64_pic.c_str());
-	} while (0);
-	// 返回码转换
-	ReadPicCodeTrans(nRet, sRetCode, sRetMsg);
 	jsonBuff["XYM"] = sRetCode;
 	jsonBuff["XYSM"] = sRetMsg;
 	jsonBuff["OTH_MSG1"] = "";

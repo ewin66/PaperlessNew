@@ -8,6 +8,7 @@ copy .\CTCameraDevice.ini .\PaperlessPack\
 copy .\GHook.dll .\PaperlessPack\
 copy .\CENT_Reader.dll .\PaperlessPack\
 copy .\CTCamera.dll .\PaperlessPack\
+copy .\WltRS.dll .\PaperlessPack\
 copy ".\win dll\mfc100.dll" .\PaperlessPack\
 copy ".\win dll\msvcp100.dll" .\PaperlessPack\
 copy ".\win dll\msvcr100.dll" .\PaperlessPack\
