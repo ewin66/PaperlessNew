@@ -404,12 +404,17 @@ int AnalyzeData()
 	fp = NULL;
 
 	GtWriteTrace(30, "[%s][%d]: fileBuffer [%s]", __FUNCTION__, __LINE__, fileBuffer);
-	char buffer[128] = {0};
-	//sprintf((char *)buffer, "{\"code\":\"0\", \"msg\":\"成功\", \"url\":\"http://www.baidu.com\"}");//测试字符串
-	//sprintf((char *)buffer, "{\"code\":\"1\", \"msg\":\"失败\", \"url\":\"\"}");//测试字符串
-	//sprintf((char *)buffer, "{\"code\":\"2\", \"msg\":\"失败\", \"url\":\"\"}");//测试字符串
+// 	// 临时字符串
+// 	char strTmp[256] = {0};
+// 	CString iniDir = GetAppPath()+"\\win.ini";
+// 	// 获取配置文件中的窗口显示的位置
+// 	GetPrivateProfileString("Information", "urltest", "-1", strTmp, sizeof(strTmp)-1, iniDir);
+// 	char buffer[128] = {0};
+// 	sprintf((char *)buffer, "{\"code\":\"0\", \"msg\":\"成功\", \"url\":\"%s\"}", strTmp);//测试字符串
+// 	//sprintf((char *)buffer, "{\"code\":\"1\", \"msg\":\"失败\", \"url\":\"\"}");//测试字符串
+// 	//sprintf((char *)buffer, "{\"code\":\"2\", \"msg\":\"失败\", \"url\":\"\"}");//测试字符串
+// 	string recvBuff = (char *)buffer;
 	string recvBuff = (char *)fileBuffer;
-	//string recvBuff = (char *)buffer;
 	// 解析服务端返回的json类型数据，获取交易类型
 	//json解析
 	Json::Reader reader;
@@ -451,7 +456,7 @@ int AnalyzeData()
 					}
 					else 
 					{
-						GtWriteTrace(30, "[%s][%d]服务端返回url地址=[%s]", __FUNCTION__, __LINE__, strUrl);
+						GtWriteTrace(30, "[%s][%d]服务端返回url地址=[%s]\n", __FUNCTION__, __LINE__, strUrl);
 						memset(sendBuff, 0, sizeof(sendBuff));
 						// 赋值网址到全局变量中
 						memcpy(sendBuff, strUrl, strlen(strUrl));
@@ -460,7 +465,7 @@ int AnalyzeData()
 						{
 							pPaperlessDlg->pInputDlg->ShowWindow(SW_HIDE);
 						}
-						ShellExecute(NULL, _T("open"), _T("IExplore.exe"), _T(strUrl), NULL, SW_SHOWNORMAL);
+						ShowUrlInIE(strUrl);
 // 						// 显示网页(发消息给指定窗口)
 // 						::PostMessageA(pPaperlessDlg->pMyHtmlView->GetSafeHwnd(), WM_HTML_SHOW, (WPARAM)sendBuff, NULL);
 					}
@@ -516,5 +521,247 @@ int AnalyzeData()
 		free(fileBuffer);
 		fileBuffer = NULL;
 	}
+	return 0;
+}
+
+
+typedef struct S_GET_WND_PARAM
+{
+	// 需要比较的URL地址（通过比较打开IE的地址栏url地址判断是否之前存在显示核查信息地址）
+	char sUrlCmp[256];
+	// 回传的窗口句柄，找到显示核查信息地址的IE窗口，没找到返回NULL
+	HWND hWnd;
+}GET_WND_PARAM, *LP_GET_WND_PARAM;
+
+
+int GetIEUrl(HWND hWnd, char *pUrl, int nLen)
+{
+	if (pUrl == NULL || hWnd == NULL || nLen <= 0)
+	{
+		return -1;
+	}
+	// 	HWND hwnd;
+	// 	hwnd = ::FindWindowEx(0, 0, TEXT("IEFrame"), NULL);
+	// 	if (hwnd == NULL) return -1;
+	HWND hwnd = hWnd;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("WorkerW"), NULL);
+	if (hwnd == NULL) return -2;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("RebarWindow32"), NULL);
+	if (hwnd == NULL) return -4;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("ComboBoxEx32"), NULL);
+	if (hwnd == NULL) return -5;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("ComboBox"), NULL);
+	if (hwnd == NULL) return -6;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("Edit"), NULL);  
+	if (hwnd == NULL) return -7;
+
+	::SendMessage( hwnd, WM_GETTEXT, nLen, (LPARAM)pUrl);
+	//GtWriteTrace(30, "%s:%d: 获取到了Url地址=[%s]!", __FUNCTION__, __LINE__, pUrl);
+	return 0;
+}
+
+
+int SetIEUrl(HWND hWnd, const char *pUrl, int nLen)
+{
+	if (pUrl == NULL || hWnd == NULL || nLen <= 0)
+	{
+		return -1;
+	}
+	HWND hwnd = hWnd;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("WorkerW"), NULL);
+	if (hwnd == NULL) return -2;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("RebarWindow32"), NULL);
+	if (hwnd == NULL) return -4;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("ComboBoxEx32"), NULL);
+	if (hwnd == NULL) return -5;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("ComboBox"), NULL);
+	if (hwnd == NULL) return -6;
+
+	hwnd = ::FindWindowEx(hwnd, 0, TEXT("Edit"), NULL);  
+	if (hwnd == NULL) return -7;
+
+	::SendMessage( hwnd, WM_SETTEXT, nLen, (LPARAM)pUrl);
+	::SendMessage(hwnd, WM_KEYDOWN, VK_RETURN, 0);
+	Sleep(10);
+	::SendMessage(hwnd, WM_KEYUP, VK_RETURN, 0); 
+	//GtWriteTrace(30, "%s:%d: 获取到了Url地址=[%s]!", __FUNCTION__, __LINE__, pUrl);
+	return 0;
+}
+
+
+BOOL CALLBACK MyEnumProc(HWND hwnd, LPARAM lParam)
+{
+	int ret = 0;
+	char sUrl[255] = {0};
+	LP_GET_WND_PARAM p_GetWndParam = (LP_GET_WND_PARAM)lParam;
+	ret = GetIEUrl(hwnd, sUrl, sizeof(sUrl)-1);
+	//GtWriteTrace(30, "%s:%d: ret=[%d], url=[%s]", __FUNCTION__, __LINE__, ret, sUrl);
+	if (ret == 0)
+	{
+		GtWriteTrace(30, "%s:%d: 找到IE窗口 Url地址=[%s], 待比较的Url地址(strncmp)=[%s]", __FUNCTION__, __LINE__, sUrl, p_GetWndParam->sUrlCmp);
+		//GtWriteTrace(30, "%s:%d: +++++++++++++++ 成功获取到URL地址 +++++++++++++++", __FUNCTION__, __LINE__);
+		if (strncmp(sUrl, p_GetWndParam->sUrlCmp, strlen(p_GetWndParam->sUrlCmp)) == 0)
+		{
+			p_GetWndParam->hWnd = hwnd;
+			GtWriteTrace(30, "%s:%d: 找到原先显示本业务的IE窗口", __FUNCTION__, __LINE__);
+			return false;
+		}
+	}
+	return true;
+}
+
+
+// 存储已打开的IE窗口句柄
+HWND g_hWnd_Saved = NULL;
+// 显示URL地址
+int ShowUrlInIE(const char *pShowUrl)
+{
+	GtWriteTrace(30, "%s:%d: 进入显示IE窗口函数......", __FUNCTION__, __LINE__);
+	if (pShowUrl == NULL || strlen(pShowUrl) > 255)
+	{
+		return -1;
+	}
+	// url中最后一个'/'符号前的字符串
+	char sUrlTmp[256] = {0};
+	int nUrlLen = strlen(pShowUrl);
+	// 截取url中最后一个'/'符号前的字符串
+	for (int i = nUrlLen - 1; i >= 0; i--)
+	{
+		if (pShowUrl[i] == '/')
+		{
+			strncpy(sUrlTmp, pShowUrl, i);
+			break;
+		}
+	}
+	if (strcmp(sUrlTmp, "") == 0)
+	{
+		strncpy(sUrlTmp, pShowUrl, sizeof(sUrlTmp)-1);
+	}
+
+	/******************************** 配置文件获取窗口位置 *****************************/
+	// 左上角x坐标
+	int nWinXPos = 0;
+	// 左上角y坐标
+	int nWinYPos = 0;
+	// 窗口宽
+	int nWinWidth = 0;
+	// 窗口高
+	int nWinHigh = 0;
+	// 临时字符串
+	char strTmp[32] = {0};
+	CString iniDir = GetAppPath()+"\\win.ini";
+	// 获取配置文件中的窗口显示的位置
+	GetPrivateProfileString("Information", "WinXPos", "-1", strTmp, sizeof(strTmp)-1, iniDir);
+	nWinXPos = atoi(strTmp);
+	GetPrivateProfileString("Information", "WinYPos", "-1", strTmp, sizeof(strTmp)-1, iniDir);
+	nWinYPos = atoi(strTmp);
+	GetPrivateProfileString("Information", "WinWidth", "-1", strTmp, sizeof(strTmp)-1, iniDir);
+	nWinWidth = atoi(strTmp);
+	GetPrivateProfileString("Information", "WinHigh", "-1", strTmp, sizeof(strTmp)-1, iniDir);
+	nWinHigh = atoi(strTmp);
+
+	/******************************** 判断是否存在IE窗口的句柄 *****************************/
+//	if (g_hWnd_Saved == NULL)
+	{
+		/******************************** 应用程序未存窗口句柄，遍历windows窗口句柄，找windows是否有已打开网址的IE *****************************/
+		// 传给回调函数的参数
+		S_GET_WND_PARAM m_GetWndParam;
+		memset(&m_GetWndParam, 0, sizeof(S_GET_WND_PARAM));
+		// 网址参数赋值，截取最后一个'/'前的url地址
+		GtWriteTrace(30, "%s:%d: ++++++待打开URL=[%s], 待比较URL(strncmp)=[%s]", __FUNCTION__, __LINE__, pShowUrl, sUrlTmp);
+		strncpy(m_GetWndParam.sUrlCmp, sUrlTmp, sizeof(m_GetWndParam.sUrlCmp)-1);
+		// 回调函数，找windows是否有已打开网址的IE（且地址是相同的）
+		GtWriteTrace(30, "%s:%d: 开始查找windows现有IE窗口......", __FUNCTION__, __LINE__);
+		EnumWindows(MyEnumProc, (LPARAM)&m_GetWndParam);
+		GtWriteTrace(30, "%s:%d: 查找windows现有IE窗口结束", __FUNCTION__, __LINE__);
+		if (m_GetWndParam.hWnd == NULL)
+		{
+			GtWriteTrace(30, "%s:%d: 找不到已存在本业务的窗口，自己创建......", __FUNCTION__, __LINE__);
+			/******************************** windows没有已打开网址的IE，自己创建一个IE窗口 *****************************/
+			STARTUPINFO si = { sizeof(si) }; 
+			PROCESS_INFORMATION pi; 
+			char sCmdLine[256] = {0};
+
+			si.dwFlags = STARTF_USESHOWWINDOW; 
+			//TRUE表示显示创建的进程的窗口
+			si.wShowWindow = TRUE; 
+			//在Unicode版本中此参数不能为常量字符串，因为此参数会被修改;
+			sprintf_s(sCmdLine, sizeof(sCmdLine), "C:\\Program Files\\Internet Explorer\\iexplore.exe %s", pShowUrl);
+
+			BOOL bRet = ::CreateProcess ( NULL, sCmdLine, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi); 
+			int error = GetLastError();
+			if(bRet) 
+			{
+				// 创建成功，等待新进程完成它的初始化并等待用户输入，后一个参数为超时时间
+				GtWriteTrace(30, "%s:%d: 创建IE窗口成功!", __FUNCTION__, __LINE__);
+				WaitForInputIdle(pi.hProcess, 5000);
+
+				// 重新查找窗口，找到后移动其位置
+				// 传给回调函数的参数
+				S_GET_WND_PARAM m_GetWndParam_child;
+				memset(&m_GetWndParam_child, 0, sizeof(S_GET_WND_PARAM));
+				// 网址参数赋值
+				strncmp(m_GetWndParam_child.sUrlCmp, pShowUrl, sizeof(m_GetWndParam_child.sUrlCmp)-1);
+				// 回调函数，重新寻找窗口，需要改变其大小
+				EnumWindows(MyEnumProc, (LPARAM)&m_GetWndParam_child);
+				if (m_GetWndParam_child.hWnd == NULL)
+				{
+					GtWriteTrace(30, "%s:%d: 获取IE窗口失败，无法移动其位置！", __FUNCTION__, __LINE__);
+					::MessageBoxA(NULL, "获取IE窗口失败，无法移动其位置！", "错误", MB_OK);
+				}
+				else
+				{
+					GtWriteTrace(30, "%s:%d: 新建句柄:0x%08X!", __FUNCTION__, __LINE__, m_GetWndParam_child.hWnd);
+					//g_hWnd_Saved = m_GetWndParam_child.hWnd;
+					::MoveWindow(m_GetWndParam_child.hWnd, nWinXPos, nWinYPos, nWinWidth, nWinHigh, TRUE);
+				}
+
+				::CloseHandle (pi.hThread); 
+				::CloseHandle (pi.hProcess); 
+			} 
+			else
+			{
+				// 创建失败
+				GtWriteTrace(30, "%s:%d: 创建IE窗口失败 error=[%d]!", __FUNCTION__, __LINE__, error);
+				::MessageBoxA(NULL, "创建IE窗口失败", "错误", MB_OK);
+			}
+		}
+		else
+		{
+			// 找到了windows已存在的IE窗口（且地址是相同的）
+			GtWriteTrace(30, "%s:%d: windows原先存在句柄:0x%08X!", __FUNCTION__, __LINE__, m_GetWndParam.hWnd);
+			// 在IE页面显示新的url地址
+			SetIEUrl(m_GetWndParam.hWnd, pShowUrl, strlen(pShowUrl));
+			// 显示IE窗口
+			//::ShowWindow(m_GetWndParam.hWnd, SW_SHOWNA);
+			::SetWindowPos(m_GetWndParam.hWnd, HWND_TOPMOST, 0, 0, 100, 100, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+			::SetWindowPos(m_GetWndParam.hWnd, HWND_NOTOPMOST, 0, 0, 100, 100, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+			// 窗口位置写入配置文件
+			// 监听句柄的消息
+			// 句柄赋值
+			//g_hWnd_Saved = m_GetWndParam.hWnd;
+		}
+	}
+// 	else
+// 	{
+// 		// 原先窗口句柄存在，判断句柄是否有效
+// 		// 判断原先窗口网址是否是待显示的网址相同（），不相同则创建
+// 		// 原先窗口句柄存在，在原先窗口显示，不需要移动窗口位置
+// 		GtWriteTrace(30, "%s:%d: 本程序已有句柄 句柄:0x%08X!", __FUNCTION__, __LINE__, g_hWnd_Saved);
+// 		// 在IE页面显示新的url地址
+// 		SetIEUrl(g_hWnd_Saved, pShowUrl, strlen(pShowUrl));
+// 		// 显示IE窗口
+// 		::ShowWindow(g_hWnd_Saved, SW_SHOW);
+// 	}
+	GtWriteTrace(30, "%s:%d: 正常退出显示IE窗口函数。\n", __FUNCTION__, __LINE__);
 	return 0;
 }

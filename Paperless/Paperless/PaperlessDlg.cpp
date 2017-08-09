@@ -115,7 +115,7 @@ void CPaperlessDlg::OnQuit()
 {
 	//GtWriteTrace(30, "%s:%d: OnQuit!", __FUNCTION__, __LINE__);
 	// 退出程序，保存窗口位置到配置文件中
-	SaveFrmPosToFile();
+	//SaveFrmPosToFile();
 	// 清空托盘图标
 	if(m_nid.hIcon)
 		::DestroyIcon(m_nid.hIcon);
@@ -220,7 +220,7 @@ BOOL CPaperlessDlg::OnInitDialog()
 	InitDevice();
 
 	/************* 从配置文件中恢复上次退出窗口位置 ***************/ 
-	InitFrmPosFromFile();
+	//InitFrmPosFromFile();
 
 	// 除非将焦点设置到控件，否则返回 TRUE
 	return TRUE;
@@ -449,7 +449,7 @@ BOOL CPaperlessDlg::InitFrmPosFromFile()
 void CPaperlessDlg::OnMyClose()
 {
 	//MessageBox("OnMyClose!");
-	SaveFrmPosToFile();
+	//SaveFrmPosToFile();
 	this->ShowWindow(SW_HIDE);
 }
 
@@ -669,12 +669,12 @@ void CPaperlessDlg::OnSysCommand( UINT nID, LPARAM lParam)
 	case SC_MAXIMIZE:
 		// 最大化按钮点击事件
 		// 保存窗口位置信息，是否最大化信息
-		this->SaveFrmPosToFile();
+		//this->SaveFrmPosToFile();
 		break;
 	case SC_MINIMIZE:
 		// 最小化按钮点击事件
 		// 保存窗口位置信息，是否最大化信息
-		this->SaveFrmPosToFile();
+		//this->SaveFrmPosToFile();
 		break;
 	default:
 		break;

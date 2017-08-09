@@ -61,3 +61,8 @@ size_t RecvData(void *pBuff, size_t nSize, size_t nMemb, void *pUserp);
  * 功能：从文件读取返回报文并解析
  **/ 
 int AnalyzeData();
+
+/**
+ * 功能：在IE中显示URL地址
+ **/ 
+int ShowUrlInIE(const char *pShowUrl);
