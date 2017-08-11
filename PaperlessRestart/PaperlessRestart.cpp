@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "PaperlessRestart.h"
 #include "PaperlessRestartDlg.h"
+#include "MyTTrace.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,6 +40,9 @@ CPaperlessRestartApp theApp;
 
 BOOL CPaperlessRestartApp::InitInstance()
 {
+	// 日志文件初始化
+	GtSetTraceFilePrefix(GetFilePath()+"\\log\\Restart");
+	GtSetTraceLevel(EM_TraceDebug);
 	// 单一实例处理
 	HANDLE m_hMutex = CreateMutex(NULL, FALSE, this->m_pszAppName);// 检查错误代码
 	if (GetLastError() == ERROR_ALREADY_EXISTS)

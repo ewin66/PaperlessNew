@@ -30,7 +30,7 @@ IplImage* rotateImage(IplImage* pImgSrc, float fDegree);
 *		fHeightWidthRate：高宽比，高/宽，比例需大于1
 * 返回值：截取后的图像，为NULL表示失败，不为空需要手动释放
 **/
-IplImage* GetCentreOfImage1(IplImage* pImgSrc, float fAreaRate, float fHeightWidthRate);
+IplImage* GetCentreOfImage(IplImage* pImgSrc, float fAreaRate, float fHeightWidthRate);
 
 /** 
 * 功能：截取图像中心区域，按面积和宽高比例截取，图像从图片文件中获取
@@ -39,4 +39,4 @@ IplImage* GetCentreOfImage1(IplImage* pImgSrc, float fAreaRate, float fHeightWid
 *		fHeightWidthRate：高宽比，高/宽，比例需大于1
 * 返回值：截取后的图像，为NULL表示失败，不为空需要手动释放
 **/
-IplImage* GetCentreOfImage2(const char *pFilePath, float fAreaRate, float fHeightWidthRate);
+IplImage* GetCentreOfFile(const char *pFilePath, float fAreaRate, float fHeightWidthRate);

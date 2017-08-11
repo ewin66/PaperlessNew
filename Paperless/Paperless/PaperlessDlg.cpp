@@ -25,7 +25,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 static UINT indicators[] =
 {
 	ID_SEPARATOR,           // 状态行指示器
@@ -107,6 +106,8 @@ CPaperlessDlg::~CPaperlessDlg()
 		delete pBaseSaveCameraPic;
 		pBaseSaveCameraPic = NULL;
 	}
+	// 取消钩子监听
+	StopKeyBoardHook();
 }
 
 
@@ -151,6 +152,8 @@ void CPaperlessDlg::OnQuit()
 		delete pBaseSaveCameraPic;
 		pBaseSaveCameraPic = NULL;
 	}
+	// 取消钩子监听
+	StopKeyBoardHook();
 	DestroyWindow();
 }
 
@@ -168,12 +171,12 @@ int CPaperlessDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	/************* 创建状态栏 ***************/ 
-	if (!m_wndStatusBar.Create(this))
-	{
-		TRACE0("未能创建状态栏\n");
-		return -1;      // 未能创建
-	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+// 	if (!m_wndStatusBar.Create(this))
+// 	{
+// 		TRACE0("未能创建状态栏\n");
+// 		return -1;      // 未能创建
+// 	}
+// 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 	/************* 创建托盘图标 ***************/ 
 	//启动就隐藏到右下角
 	memset(&m_nid,0,sizeof(m_nid));
@@ -182,7 +185,7 @@ int CPaperlessDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
 	m_nid.uCallbackMessage = WM_TRAYNOTIFY;
 	CString strToolTip = "免填单系统后台服务";
-	strcpy(m_nid.szTip,strToolTip.GetBuffer());
+	strcpy(m_nid.szTip, strToolTip.GetBuffer());
 	m_nid.uID = IDR_MAINFRAME;
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_nid.hIcon = hIcon;
@@ -221,9 +224,23 @@ BOOL CPaperlessDlg::OnInitDialog()
 
 	/************* 从配置文件中恢复上次退出窗口位置 ***************/ 
 	//InitFrmPosFromFile();
+	ShowBalloonTip("程序正在运行......", "免填单系统后台服务", 1000, 1);
 
+
+	this->handle_memery = GetCurrentProcess();
 	// 除非将焦点设置到控件，否则返回 TRUE
 	return TRUE;
+}
+
+BOOL CPaperlessDlg::ShowBalloonTip(LPCTSTR szMsg, LPCTSTR szTitle, UINT uTimeout, DWORD dwInfoFlags)
+{
+	m_nid.cbSize=sizeof(NOTIFYICONDATA);
+	m_nid.uFlags = NIF_INFO;
+	m_nid.uTimeout = uTimeout;
+	m_nid.dwInfoFlags = dwInfoFlags;
+	strcpy(m_nid.szInfo, szMsg ? szMsg : _T(""));
+	strcpy(m_nid.szInfoTitle, szTitle ? szTitle : _T(""));
+	return Shell_NotifyIcon(NIM_MODIFY, &m_nid);
 }
 
 
@@ -494,7 +511,7 @@ void CPaperlessDlg::StartKeyBoardHook()
 		// 自动填单继续输入快捷键
 		combKey[1].count = 2;
 		combKey[1].keys[0] = VK_LCONTROL;
-		combKey[1].keys[1] = 80;
+		combKey[1].keys[1] = 79;
 		combKey[1].keys[2] = 0;
 		combKey[1].keys[3] = 0;
 		myHwnd[1] = m_hWnd;
@@ -508,10 +525,13 @@ void CPaperlessDlg::StartKeyBoardHook()
 		// 设置全局键盘钩子
 		SetGHook_KEYBOARD();
 	}
-	else
-	{
-		FreeGHook_KEYBOARD();
-	}
+}
+
+
+// 关闭全局钩子
+void CPaperlessDlg::StopKeyBoardHook()
+{
+	FreeGHook_KEYBOARD();
 }
 
 
@@ -561,7 +581,7 @@ LRESULT CPaperlessDlg::OnScreenDlgMessage(WPARAM wParam, LPARAM iParam)
 LRESULT CPaperlessDlg::OnContinueInput(WPARAM wParam, LPARAM iParam)
 {
 	SendToWindows();
-	//MessageBox("tsadfd");
+	//MessageBox("OnContinueInput");
 	return 0;
 }
 
@@ -656,8 +676,9 @@ void CPaperlessDlg::ShowManualInput(char *tip)
 // 托盘菜单->手动输入
 void CPaperlessDlg::OnManualInput()
 {
-	//int j = 0;
-	//volatile int i = 10 / j;
+	// int j = 0;
+	// volatile int i = 10 / j;
+	// pInputDlg->ShowWindow(SW_SHOWNA);
 	ShowManualInput("");
 }
 

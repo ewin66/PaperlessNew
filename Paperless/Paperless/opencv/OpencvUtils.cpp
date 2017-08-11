@@ -23,12 +23,14 @@ int MyAutoCrop(IplImage *pImgSrc, IplImage **pImgDest)
 	int nMaxAreaIndex = 0;
 	// 原图像Mat，使用Mat是为了提高图像处理效率，不需手动释放
 	cv::Mat srcImg;
-	// 灰度图像Mat，新的图像
-	cv::Mat grayImg;
-	// 均值滤波图像，浅拷贝，在灰度图上直接处理
-	cv::Mat avgFilterImg;
-	// 二值化图像
-	cv::Mat binImg;
+	// 之后进行均值滤波、二值化处理，都在此图上
+	cv::Mat tmpImg;
+// 	// 灰度图像Mat，新的图像
+// 	cv::Mat grayImg;
+// 	// 均值滤波图像，浅拷贝，在灰度图上直接处理
+// 	cv::Mat avgFilterImg;
+// 	// 二值化图像
+// 	cv::Mat binImg;
 	// 容器，检测的轮廓数组
 	std::vector<std::vector<cv::Point> > contours;
 	std::vector<cv::Vec4i> hierarchy;
@@ -47,31 +49,29 @@ int MyAutoCrop(IplImage *pImgSrc, IplImage **pImgDest)
 	cv::destroyWindow("原图像");
 #endif
 	// 灰度处理
-	cvtColor(srcImg, grayImg, CV_RGB2GRAY);
+	cvtColor(srcImg, tmpImg, CV_RGB2GRAY);
 #if SHOW_IMAGE
-	imshow("灰度图", grayImg);
+	imshow("灰度图", tmpImg);
 	cvWaitKey(0);
 	cv::destroyWindow("灰度图");
 #endif
-	// 3*3均值滤波图像，从灰度图上做浅拷贝，与灰度图指向同一块数据，之后做均值滤波处理
-	avgFilterImg = grayImg;
-	blur(grayImg, avgFilterImg, cv::Size(3, 3));
+	// 3*3均值滤波图像，均值滤波处理
+	blur(tmpImg, tmpImg, cv::Size(3, 3));
 #if SHOW_IMAGE
-	imshow("均值滤波图像", avgFilterImg);
+	imshow("均值滤波图像", tmpImg);
 	cvWaitKey(0);
 	cv::destroyWindow("均值滤波图像");
 #endif
-	// 二值化图像，从均值滤波图像上做浅拷贝，与均值滤波图像指向同一块数据，之后做二值化处理
-	binImg = avgFilterImg;
-	threshold(avgFilterImg, binImg, 0, 255, CV_THRESH_OTSU);
+	// 二值化图像，做二值化处理
+	threshold(tmpImg, tmpImg, 0, 255, CV_THRESH_OTSU);
 #if SHOW_IMAGE 
-	imshow("二值化图像", avgFilterImg);
+	imshow("二值化图像", tmpImg);
 	cvWaitKey(0);
 	cv::destroyWindow("二值化图像");
 #endif
 
 	// 边缘检测处理
-	cv::findContours(binImg, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
+	cv::findContours(tmpImg, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 	// 判断是否检测到轮廓
 	if (contours.size() == 0 || hierarchy.size() == 0)
 	{
@@ -300,14 +300,14 @@ int round_double(float number)
 *		fHeightWidthRate：高宽比，高/宽，比例需大于1
 * 返回值：截取后的图像，为NULL表示失败，不为空需要手动释放
 **/
-IplImage* GetCentreOfImage2(const char *pFilePath, float fAreaRate, float fHeightWidthRate)
+IplImage* GetCentreOfFile(const char *pFilePath, float fAreaRate, float fHeightWidthRate)
 {
 	IplImage *pSrcImg = cvLoadImage(pFilePath, CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_ANYCOLOR);
 	if (pSrcImg == NULL)
 	{
 		return NULL;
 	}
-	IplImage *pDestImg = GetCentreOfImage1(pSrcImg, fAreaRate, fHeightWidthRate);
+	IplImage *pDestImg = GetCentreOfImage(pSrcImg, fAreaRate, fHeightWidthRate);
 	if (pDestImg == NULL)
 	{
 		cvReleaseImage(&pSrcImg);
@@ -324,7 +324,7 @@ IplImage* GetCentreOfImage2(const char *pFilePath, float fAreaRate, float fHeigh
 *		fHeightWidthRate：高宽比，高/宽，比例需大于1
 * 返回值：截取后的图像，为NULL表示失败，不为空需要手动释放
 **/
-IplImage* GetCentreOfImage1(IplImage* pImgSrc, float fAreaRate, float fHeightWidthRate)
+IplImage* GetCentreOfImage(IplImage* pImgSrc, float fAreaRate, float fHeightWidthRate)
 {
 	if (pImgSrc == NULL || fAreaRate <= 1 || fHeightWidthRate <= 1)
 	{

@@ -9,6 +9,7 @@ copy .\GHook.dll .\PaperlessPack\
 copy .\CENT_Reader.dll .\PaperlessPack\
 copy .\CTCamera.dll .\PaperlessPack\
 copy .\WltRS.dll .\PaperlessPack\
+copy .\iocp.dll .\PaperlessPack\
 copy ".\win dll\mfc100d.dll" .\PaperlessPack\
 copy ".\win dll\msvcp100d.dll" .\PaperlessPack\
 copy ".\win dll\msvcr100d.dll" .\PaperlessPack\

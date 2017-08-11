@@ -39,7 +39,11 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 
 	// 开启全局钩子
-	afx_msg void StartKeyBoardHook();
+	void StartKeyBoardHook();
+	// 关闭全局钩子
+	void StopKeyBoardHook();
+	// 托盘气泡提示
+	BOOL ShowBalloonTip(LPCTSTR szMsg, LPCTSTR szTitle, UINT uTimeout, DWORD dwInfoFlags);
 	// 收到钩子发送的截屏消息的处理
 	afx_msg LRESULT OnScreenshot(WPARAM wParam, LPARAM lParam);
 	// 截图界面传回的消息处理
@@ -67,12 +71,14 @@ protected:
 	HICON m_hIcon;
 	// 控件条嵌入成员
 	CStatusBar m_wndStatusBar;
-	// 定义托盘的相关结构体
-	NOTIFYICONDATA m_nid;
 	// 定义托盘菜单
 	CMenu m_menu;
+public:
+	// 定义托盘的相关结构体
+	NOTIFYICONDATA m_nid;
 
 public:
+	HANDLE handle_memery;
 	// 身份证识读仪设备编号
 	int nReadIDDevice;
 	// 高拍仪摄像头设备编号

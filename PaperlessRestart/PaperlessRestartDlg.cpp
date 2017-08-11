@@ -6,6 +6,7 @@
 #include "PaperlessRestart.h"
 #include "PaperlessRestartDlg.h"
 #include "afxdialogex.h"
+#include "MyTTrace.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -21,13 +22,13 @@ CPaperlessRestartDlg::CPaperlessRestartDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	// 配置文件读取配置
 	CString strSettingDir = GetAppPath()+"\\win.ini";
-	// 获取等待启动时间
 	char sWaitTime[32] = {0};
 	memset(sAppDir, 0, sizeof(sAppDir));
-	sprintf_s(sAppDir, sizeof(sAppDir)-1, "%s\\XXbgService.exe", GetAppPath().GetBuffer());
-	//GetPrivateProfileString("Setting", "AppDir", "./Paperless.exe", sAppDir, sizeof(sAppDir)-1, strSettingDir);
+	sprintf_s(sAppDir, sizeof(sAppDir)-1, "%s\\Paperless.exe", GetAppPath().GetBuffer());
 	GetPrivateProfileString("Information", "WaitTime", "3", sWaitTime, sizeof(sWaitTime)-1, strSettingDir);
 	nTime = atoi(sWaitTime);
+	nTime = nTime > 5 ? 5 : nTime;
+	nTime = nTime < 1 ? 1 : nTime;
 }
 
 void CPaperlessRestartDlg::DoDataExchange(CDataExchange* pDX)
@@ -77,7 +78,7 @@ BOOL CPaperlessRestartDlg::OnInitDialog()
 	else
 	{
 		// 重启程序主动打开无效
-		sTip.Format(_T("重启程序主动打开无效！"), nTime);
+		sTip.Format(_T("重启程序手动打开无效！"), nTime);
 		pEdit->SetWindowText(sTip);
 		// IDCANCEL
 		CPaperlessRestartDlg *pDlg= (CPaperlessRestartDlg*)AfxGetApp()->m_pMainWnd;
@@ -132,11 +133,12 @@ int CPaperlessRestartDlg::RestartPaperlessApp()
 	CPaperlessRestartDlg *pDlg= (CPaperlessRestartDlg*)AfxGetApp()->m_pMainWnd;
 	CEdit* pEdit = (CEdit*)pDlg->GetDlgItem(IDC_STATIC);
 	CString sTip;
-	sTip.Format(_T("应用程序发生异常，正在重新启动..."), pDlg->nTime);
+	sTip.Format(_T("正在重新启动..."), pDlg->nTime);
 	pEdit->SetWindowText(sTip);
 
 	// 启动主程序
 	//ShellExecute(NULL, "open", sAppDir, (LPCSTR)"EXCEPTION_RESTART", NULL, SW_SHOWNORMAL);
+	GtWriteTrace(30, "%s:%d: 异常重启处理，即将重启主程序\n\t%s", __FUNCTION__, __LINE__, sAppDir);
 	ShellExecute(NULL, "open", sAppDir, NULL, NULL, SW_SHOWNORMAL);
 	pDlg->KillTimer(1);
 	pDlg->DestroyWindow();

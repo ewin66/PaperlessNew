@@ -39,10 +39,11 @@ void getIDPicJson(Json::Value &jsonBuff, int flag, CString strDir, int nRet);
 
 /* 功能：通过人像照片组返回报文
  * 入参：strDir 照片本地路径
+ *		pFilename 照片名称
  *		nRet 调本函数之前，保存人像照是否成功
  *		jsonBuff：返回报文 
 */ 
-void getJsonFromPersonPic(Json::Value &jsonBuff, CString strDir, int nRet);
+void getJsonFromPersonPic(Json::Value &jsonBuff, CString strDir, char *pFilename, int nRet);
 
 /* 功能：通过人像照片组返回报文
  * 入参：strDir 照片本地绝对路径

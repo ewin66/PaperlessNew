@@ -99,6 +99,7 @@
     <None Include="res\PaperlessRestart.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MyTTrace.h" />
     <ClInclude Include="PaperlessRestart.h" />
     <ClInclude Include="PaperlessRestartDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -106,6 +107,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MyTTrace.cpp" />
     <ClCompile Include="PaperlessRestart.cpp" />
     <ClCompile Include="PaperlessRestartDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

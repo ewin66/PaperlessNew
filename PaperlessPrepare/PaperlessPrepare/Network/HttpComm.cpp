@@ -341,7 +341,7 @@ int StartPaperless()
 	char sRetMsg[128] = {0};
 
 	// 主应用程序路径
-	sprintf_s(sAppDir, sizeof(sAppDir)-1, "%s\\XXbgService.exe", GetAppPath().GetBuffer());
+	sprintf_s(sAppDir, sizeof(sAppDir)-1, "%s\\Paperless.exe", GetAppPath().GetBuffer());
 	//GetPrivateProfileString("Information", "AppDir", "../Paperless.exe", sAppDir, sizeof(sAppDir)-1, GetFilePath()+"\\win.ini");
 	GtWriteTrace(30, "[%s][%d]启动程序=[%s]!", __FUNCTION__, __LINE__, sAppDir);
 	// 启动主程序

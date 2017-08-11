@@ -9,6 +9,7 @@
 #endif
 
 #include "resource.h"		// Ö÷·ûºÅ
+#include "PaperlessDlg.h"
 
 
 // CPaperlessApp:

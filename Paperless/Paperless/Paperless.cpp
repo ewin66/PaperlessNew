@@ -127,9 +127,9 @@ BOOL CPaperlessApp::InitInstance()
 	// 例如修改为公司或组织名
 	SetRegistryKey(_T("国通科技"));
 
-	CPaperlessDlg *dlg = new CPaperlessDlg();
-	dlg->Create(IDD_PAPERLESS_DIALOG);
-	m_pMainWnd = dlg;
+	CPaperlessDlg *pMainDlg = new CPaperlessDlg();
+	pMainDlg->Create(IDD_PAPERLESS_DIALOG);
+	m_pMainWnd = pMainDlg;
 	m_pMainWnd->UpdateWindow();
 
 	// 删除上面创建的 shell 管理器。
@@ -522,7 +522,8 @@ BOOL CPaperlessApp::ProcessMessageFilter(int code, LPMSG lpMsg)
 LONG WINAPI FreeEIM_UnhandledExceptionFilter(LPEXCEPTION_POINTERS pExceptionInfo)
 {
 	//AfxMessageBox("程序发生异常，即将退出程序！");	//调用回调函数成功
-
+	GtWriteTrace(30, "**************************************************************************");
+	GtWriteTrace(30, "%s:%d: 应用程序发生异常，即将退出程序......", __FUNCTION__, __LINE__);
 	static int flag = 0;
 	// 写dump文件
 	SYSTEMTIME st;
@@ -534,11 +535,13 @@ LONG WINAPI FreeEIM_UnhandledExceptionFilter(LPEXCEPTION_POINTERS pExceptionInfo
 	sDmpFilename.ReleaseBuffer();
 	//MultiByteToWideChar(CP_ACP, 0, path.c_str(), size, buffer, size * sizeof(wchar_t));
 	//buffer[size] = 0;  //确保以 '\0' 结尾 
+	// 创建dump文件
 	HANDLE hFile = ::CreateFile(pPath, GENERIC_WRITE,
 		FILE_SHARE_WRITE, NULL, CREATE_NEW,
 		FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
-	{   
+	{
+		GtWriteTrace(30, "%s:%d: \t创建dump文件成功", __FUNCTION__, __LINE__);
 		MINIDUMP_EXCEPTION_INFORMATION exptInfo;
 		exptInfo.ThreadId = ::GetCurrentThreadId();
 		exptInfo.ExceptionPointers = pExceptionInfo;
@@ -551,16 +554,36 @@ LONG WINAPI FreeEIM_UnhandledExceptionFilter(LPEXCEPTION_POINTERS pExceptionInfo
 
 	if (flag == 0)
 	{
-		// 删除托盘图标
-// 		NOTIFYICONDATA *pNid = &((CMainFrame*)(AfxGetApp()->m_pMainWnd))->m_nid;
-// 		Shell_NotifyIcon(NIM_DELETE, pNid);
 		flag = 1;
+		// 删除托盘图标
+		GtWriteTrace(30, "%s:%d: \t开始删除托盘图标...", __FUNCTION__, __LINE__);
+		NOTIFYICONDATA *pNid = &((CPaperlessDlg*)(AfxGetApp()->m_pMainWnd))->m_nid;
+		Shell_NotifyIcon(NIM_DELETE, pNid);
 		// 调用重启/错误提交程序（视情况而定）
-		LPCSTR lpcsOperate = _T("open");
-		LPCSTR lpcsDir = _T("H:\\个人文件\\gotop\\其他项目\\程序包_20170709\\XXbgService\\Debug\\PaperlessRestart.exe");
+		LPCSTR lpcsOperate = "open";
+		CString sRestartAppDir = GetAppPath();
+		sRestartAppDir += "\\PaperlessRestart.exe";
+		LPCSTR lpcsDir = sRestartAppDir.GetBuffer();
+		sRestartAppDir.ReleaseBuffer();
 		//WinExec(lpcsDir, SW_SHOWNORMAL);
-		ShellExecute(NULL, lpcsOperate, lpcsDir, (LPCSTR)"EXCEPTION_RESTART", NULL, SW_SHOWNORMAL);
+		GtWriteTrace(30, "%s:%d: \t开始启动重启程序...", __FUNCTION__, __LINE__);
+		GtWriteTrace(30, "%s:%d: \t程序：%s", __FUNCTION__, __LINE__, lpcsDir);
+		HINSTANCE hi = ShellExecute(NULL, lpcsOperate, lpcsDir, (LPCSTR)"EXCEPTION_RESTART", NULL, SW_SHOWNORMAL);
+		if((int)hi < 32)
+		{
+			char sLastMsg[256] = {0};
+			MyGetLastError(sLastMsg, sizeof(sLastMsg));
+			CString sTip = "启动重启程序失败！";
+			sTip += sLastMsg;
+			::MessageBoxA(NULL, sTip, "提示", MB_OK);
+			GtWriteTrace(30, "%s:%d: \t%s", __FUNCTION__, __LINE__, sTip.GetBuffer());
+			sTip.ReleaseBuffer();
+		}
+		else
+		{
+			GtWriteTrace(30, "%s:%d: \t启动重启程序成功！", __FUNCTION__, __LINE__);
+		}
 	}
-
+	GtWriteTrace(30, "**************************************************************************");
 	return EXCEPTION_EXECUTE_HANDLER;	//返回本回调函数的处理结果
 }

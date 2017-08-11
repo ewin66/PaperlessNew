@@ -232,7 +232,7 @@ UINT ThreadFunc(LPVOID pParm)
 		// Æ´ÇëÇó±¨ÎÄ
 		Json::Value jsonBuff;
 		jsonBuff["type"] = "2";
-		jsonBuff["string"] = "XXbgService.exe";
+		jsonBuff["string"] = "Paperless.exe";
 		jsonBuff["version"] = sVersion;
 		jsonBuff["desVersion"] = "0";
 		jsonBuff["other"] = "";

@@ -34,7 +34,7 @@ CCentOneCamera::~CCentOneCamera()
 }
 
 
-// 重写，文拍摄像头获取人像照片
+// 重写，文拍摄像头获取身份证照片
 int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 {
 	GtWriteTrace(30, "%s:%d: 进入文拍摄像头获取身份证照片函数!", __FUNCTION__, __LINE__);
@@ -87,7 +87,7 @@ int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 	nRet = mHighCamera->OpenDevice(atoi(sDeskScanNo));
 	if (nRet != 0)
 	{
-		GtWriteTrace(30, "%s:%d: 打开摄像头 OpenDevice() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
+		GtWriteTrace(30, "%s:%d: 打开摄像头失败 OpenDevice() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
 		return 105;
 	}
 	GtWriteTrace(30, "%s:%d: \t设置自动裁边!", __FUNCTION__, __LINE__);
@@ -95,7 +95,7 @@ int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 	nRet = mHighCamera->SetAutoCrop(true, atoi(sDeskScanNo));
 	if (nRet != 0)
 	{
-		GtWriteTrace(30, "%s:%d: 设置自动裁边 SetAutoCrop() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
+		GtWriteTrace(30, "%s:%d: 设置自动裁边失败 SetAutoCrop() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
 		mHighCamera->CloseDevice();
 		return 107;
 	}
@@ -106,7 +106,7 @@ int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 	nRet = mHighCamera->ScanImage(tmpDir);
 	if (nRet != 0)
 	{
-		GtWriteTrace(30, "%s:%d: 调高拍仪接口保存图片 ScanImage() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
+		GtWriteTrace(30, "%s:%d: 调高拍仪接口保存图片失败 ScanImage() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
 		mHighCamera->CloseDevice();
 		return 108;
 	}
@@ -114,41 +114,41 @@ int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 	nRet = mHighCamera->CloseDevice();
 	GtWriteTrace(30, "%s:%d: \t关闭设备返回值 CloseDevice() nRet = [%d]", __FUNCTION__, __LINE__, nRet);
 
-	// 修改身份证的分辨率，大->小
-	width = atoi(sIDPicWidth);
-	high = atoi(sIDPicHigh);
-	// 根据路径载入大图片
-	imSrc.Load(pSaveDesktopIDPicFilenm);
-	if (imSrc.IsNull())
-	{
-		GtWriteTrace(30, "%s:%d: 分辨率转换时载入源图片失败 Load()\n", __FUNCTION__, __LINE__);
-		return 110;
-	}
-	// 建立小图片
-	if (!imDest.Create(width, high, 24))
-	{
-		GtWriteTrace(30, "%s:%d: 分辨率转换时建立目标图片失败 Create()\n", __FUNCTION__, __LINE__);
-		return 111;
-	}
-	// 获取小图片HDC
-	destDc = imDest.GetDC();
-	destRect.SetRect(0, 0, width, high);
-	// 设置图片不失真
-	SetStretchBltMode(destDc, STRETCH_HALFTONE);
-	imSrc.StretchBlt(destDc, destRect, SRCCOPY);
-	imDest.ReleaseDC();
-	HRESULT hResult = imDest.Save(pSaveDesktopIDPicFilenm);
-	if(FAILED(hResult))
-	{
-		GtWriteTrace(30, "%s:%d: 分辨率转换时保存目标图片失败 Save()\n", __FUNCTION__, __LINE__);
-		return 112;
-	}
+// 	// 修改身份证的分辨率，大->小
+// 	width = atoi(sIDPicWidth);
+// 	high = atoi(sIDPicHigh);
+// 	// 根据路径载入大图片
+// 	imSrc.Load(pSaveDesktopIDPicFilenm);
+// 	if (imSrc.IsNull())
+// 	{
+// 		GtWriteTrace(30, "%s:%d: 分辨率转换时载入源图片失败 Load()\n", __FUNCTION__, __LINE__);
+// 		return 110;
+// 	}
+// 	// 建立小图片
+// 	if (!imDest.Create(width, high, 24))
+// 	{
+// 		GtWriteTrace(30, "%s:%d: 分辨率转换时建立目标图片失败 Create()\n", __FUNCTION__, __LINE__);
+// 		return 111;
+// 	}
+// 	// 获取小图片HDC
+// 	destDc = imDest.GetDC();
+// 	destRect.SetRect(0, 0, width, high);
+// 	// 设置图片不失真
+// 	SetStretchBltMode(destDc, STRETCH_HALFTONE);
+// 	imSrc.StretchBlt(destDc, destRect, SRCCOPY);
+// 	imDest.ReleaseDC();
+// 	HRESULT hResult = imDest.Save(pSaveDesktopIDPicFilenm);
+// 	if(FAILED(hResult))
+// 	{
+// 		GtWriteTrace(30, "%s:%d: 分辨率转换时保存目标图片失败 Save()\n", __FUNCTION__, __LINE__);
+// 		return 112;
+// 	}
 	GtWriteTrace(30, "%s:%d: 文拍摄像头获取身份证照片函数正常退出。\n", __FUNCTION__, __LINE__);
 	return 0;
 }
 
 
-// 重写，环境摄像头获取身份证照片
+// 重写，环境摄像头获取人像照片
 int CCentOneCamera::MySaveEnvPic(const char *pSaveEnvPicFilenm)
 {
 	GtWriteTrace(30, "%s:%d: 进入环境摄像头获取人像照片函数!", __FUNCTION__, __LINE__);
@@ -179,25 +179,25 @@ int CCentOneCamera::MySaveEnvPic(const char *pSaveEnvPicFilenm)
 	nRet = mHighCamera->OpenDevice(atoi(sEnvScanNo));
 	if (nRet != 0)
 	{
-		GtWriteTrace(30, "%s:%d: 打开摄像头 OpenDevice() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
+		GtWriteTrace(30, "%s:%d: 打开摄像头失败 OpenDevice() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
 		return 105;
 	}
-	// 设置分辨率
-	GtWriteTrace(30, "%s:%d: \t设置分辨率!", __FUNCTION__, __LINE__);
-	nRet = mHighCamera->SetScanSize(atoi(sEnvScanSize), atoi(sEnvScanNo));
-	if (nRet != 0)
-	{
-		GtWriteTrace(30, "%s:%d: 设置分辨率 SetScanSize() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
-		mHighCamera->CloseDevice();
-		return 106;
-	}
+// 	// 设置分辨率
+// 	GtWriteTrace(30, "%s:%d: \t设置分辨率!", __FUNCTION__, __LINE__);
+// 	nRet = mHighCamera->SetScanSize(atoi(sEnvScanSize), atoi(sEnvScanNo));
+// 	if (nRet != 0)
+// 	{
+// 		GtWriteTrace(30, "%s:%d: 设置分辨率失败 SetScanSize() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
+// 		mHighCamera->CloseDevice();
+// 		return 106;
+// 	}
 	// 调高拍仪接口保存图片
 	CString tmpDir = pSaveEnvPicFilenm;
 	GtWriteTrace(30, "%s:%d: \t保存人像照片!", __FUNCTION__, __LINE__);
 	nRet = mHighCamera->ScanImage(tmpDir);
 	if (nRet != 0)
 	{
-		GtWriteTrace(30, "%s:%d: 调高拍仪接口保存图片 ScanImage() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
+		GtWriteTrace(30, "%s:%d: 调高拍仪接口保存图片失败 ScanImage() nRet = %d\n", __FUNCTION__, __LINE__, nRet);
 		mHighCamera->CloseDevice();
 		return 108;
 	}
@@ -206,7 +206,7 @@ int CCentOneCamera::MySaveEnvPic(const char *pSaveEnvPicFilenm)
 	GtWriteTrace(30, "%s:%d: \t关闭设备返回值 CloseDevice() nRet = [%d]", __FUNCTION__, __LINE__, nRet);
 
 	// 裁剪中心区域
-	IplImage *pDestImg = GetCentreOfImage2(pSaveEnvPicFilenm, F_AREA_RATE, F_HEIGHT_WIDTH_RATE);
+	IplImage *pDestImg = GetCentreOfFile(pSaveEnvPicFilenm, F_AREA_RATE, F_HEIGHT_WIDTH_RATE);
 	if (pDestImg == NULL)
 	{
 		// 裁剪失败，不处理

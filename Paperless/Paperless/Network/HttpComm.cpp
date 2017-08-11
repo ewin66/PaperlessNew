@@ -745,6 +745,7 @@ int ShowUrlInIE(const char *pShowUrl)
 			//::ShowWindow(m_GetWndParam.hWnd, SW_SHOWNA);
 			::SetWindowPos(m_GetWndParam.hWnd, HWND_TOPMOST, 0, 0, 100, 100, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
 			::SetWindowPos(m_GetWndParam.hWnd, HWND_NOTOPMOST, 0, 0, 100, 100, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+			::SetWindowPos(m_GetWndParam.hWnd, HWND_TOP, 0, 0, 100, 100, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
 			// 窗口位置写入配置文件
 			// 监听句柄的消息
 			// 句柄赋值
