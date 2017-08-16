@@ -103,6 +103,7 @@ int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 	// 调高拍仪接口保存图片
 	CString tmpDir = pSaveDesktopIDPicFilenm;
 	GtWriteTrace(30, "%s:%d: \t保存身份证照片!", __FUNCTION__, __LINE__);
+//	tmpDir.Append(".jpg");
 	nRet = mHighCamera->ScanImage(tmpDir);
 	if (nRet != 0)
 	{
@@ -114,35 +115,39 @@ int CCentOneCamera::MySaveDeskIDPic(const char *pSaveDesktopIDPicFilenm)
 	nRet = mHighCamera->CloseDevice();
 	GtWriteTrace(30, "%s:%d: \t关闭设备返回值 CloseDevice() nRet = [%d]", __FUNCTION__, __LINE__, nRet);
 
-// 	// 修改身份证的分辨率，大->小
-// 	width = atoi(sIDPicWidth);
-// 	high = atoi(sIDPicHigh);
-// 	// 根据路径载入大图片
-// 	imSrc.Load(pSaveDesktopIDPicFilenm);
-// 	if (imSrc.IsNull())
-// 	{
-// 		GtWriteTrace(30, "%s:%d: 分辨率转换时载入源图片失败 Load()\n", __FUNCTION__, __LINE__);
-// 		return 110;
-// 	}
-// 	// 建立小图片
-// 	if (!imDest.Create(width, high, 24))
-// 	{
-// 		GtWriteTrace(30, "%s:%d: 分辨率转换时建立目标图片失败 Create()\n", __FUNCTION__, __LINE__);
-// 		return 111;
-// 	}
-// 	// 获取小图片HDC
-// 	destDc = imDest.GetDC();
-// 	destRect.SetRect(0, 0, width, high);
-// 	// 设置图片不失真
-// 	SetStretchBltMode(destDc, STRETCH_HALFTONE);
-// 	imSrc.StretchBlt(destDc, destRect, SRCCOPY);
-// 	imDest.ReleaseDC();
-// 	HRESULT hResult = imDest.Save(pSaveDesktopIDPicFilenm);
-// 	if(FAILED(hResult))
-// 	{
-// 		GtWriteTrace(30, "%s:%d: 分辨率转换时保存目标图片失败 Save()\n", __FUNCTION__, __LINE__);
-// 		return 112;
-// 	}
+	// 修改身份证的分辨率，大->小
+	width = atoi(sIDPicWidth);
+	high = atoi(sIDPicHigh);
+	// 根据路径载入大图片
+//	// 测试使用，保存摄像头获取的照片
+//	char pSaveDesktopIDPicFilenm_1[256] = {0};
+//	sprintf_s(pSaveDesktopIDPicFilenm_1, sizeof(pSaveDesktopIDPicFilenm_1)-1, "%s\\IDPicture\\pic.jpg", GetAppPath().GetBuffer());
+//	imSrc.Load(pSaveDesktopIDPicFilenm_1);
+	imSrc.Load(pSaveDesktopIDPicFilenm);
+	if (imSrc.IsNull())
+	{
+		GtWriteTrace(30, "%s:%d: 分辨率转换时载入源图片失败 Load()\n", __FUNCTION__, __LINE__);
+		return 110;
+	}
+	// 建立小图片
+	if (!imDest.Create(width, high, 24))
+	{
+		GtWriteTrace(30, "%s:%d: 分辨率转换时建立目标图片失败 Create()\n", __FUNCTION__, __LINE__);
+		return 111;
+	}
+	// 获取小图片HDC
+	destDc = imDest.GetDC();
+	destRect.SetRect(0, 0, width, high);
+	// 设置图片不失真
+	SetStretchBltMode(destDc, STRETCH_HALFTONE);
+	imSrc.StretchBlt(destDc, destRect, SRCCOPY);
+	imDest.ReleaseDC();
+	HRESULT hResult = imDest.Save(pSaveDesktopIDPicFilenm);
+	if(FAILED(hResult))
+	{
+		GtWriteTrace(30, "%s:%d: 分辨率转换时保存目标图片失败 Save()\n", __FUNCTION__, __LINE__);
+		return 112;
+	}
 	GtWriteTrace(30, "%s:%d: 文拍摄像头获取身份证照片函数正常退出。\n", __FUNCTION__, __LINE__);
 	return 0;
 }

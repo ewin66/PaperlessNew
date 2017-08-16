@@ -53,6 +53,9 @@ BOOL CPaperlessRestartDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+	// 取消按钮默认隐藏
+	CButton* pButton = (CButton*)GetDlgItem(IDCANCEL);
+	pButton->ShowWindow(SW_HIDE);
 
 	// TODO: 在此添加额外的初始化代码
 	CEdit* pEdit = (CEdit*)GetDlgItem(IDC_STATIC);
@@ -81,10 +84,9 @@ BOOL CPaperlessRestartDlg::OnInitDialog()
 		sTip.Format(_T("重启程序手动打开无效！"), nTime);
 		pEdit->SetWindowText(sTip);
 		// IDCANCEL
-		CPaperlessRestartDlg *pDlg= (CPaperlessRestartDlg*)AfxGetApp()->m_pMainWnd;
-		CButton* pButton = (CButton*)pDlg->GetDlgItem(IDCANCEL);
+		// 手动打开，显示取消按钮
+		pButton->ShowWindow(SW_SHOW);
 		pButton->SetWindowText("确定");
-
 	}
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE

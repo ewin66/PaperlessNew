@@ -3,3 +3,4 @@ Release
 *.sdf
 ipch
 *.opensdf
+/README.md

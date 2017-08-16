@@ -15,6 +15,9 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#define CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 
 // CPaperlessApp
@@ -164,6 +167,7 @@ int CPaperlessApp::ExitInstance()
 
 
 	return CWinApp::ExitInstance();
+	_CrtDumpMemoryLeaks();
 }
 
 

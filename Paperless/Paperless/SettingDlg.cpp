@@ -62,6 +62,11 @@ void SettingDlg::OnBnClickedButtonOk()
 		MessageBox("热键不能只包含 Ctrl Alt Shift 中的一个或多个按键！");
 		return;
 	}
+	if (combKey.count <= 1)
+	{
+		MessageBox("热键不能只包含一个按键！");
+		return;
+	}
 	// 修改快捷键
 	SetXCombKey(0, combKey);
 

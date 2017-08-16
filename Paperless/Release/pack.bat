@@ -1,7 +1,7 @@
 md PaperlessPack
-copy .\PaperlessPack.exe .\PaperlessPack\
-copy .\PaperlessPackRestart.exe .\PaperlessPack\
-copy .\PaperlessPackPrepare.exe .\PaperlessPack\
+copy .\Paperless.exe .\PaperlessPack\
+copy .\PaperlessRestart.exe .\PaperlessPack\
+copy .\PaperlessPrepare.exe .\PaperlessPack\
 copy .\win.ini .\PaperlessPack\
 copy .\centermcfg.ini .\PaperlessPack\
 copy .\CTCameraDevice.ini .\PaperlessPack\

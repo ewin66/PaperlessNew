@@ -10,6 +10,8 @@ HHOOK g_keyboardHook = NULL;
 COMBKEY g_combKey[HOOK_NUM];
 HWND g_hWnd[HOOK_NUM];
 UINT g_msgType[HOOK_NUM];
+BYTE bSaveKeys[4];
+
 
 LRESULT CALLBACK KeyBoardMsgProc(int nCode,WPARAM wParam,LPARAM lParam)
 {
@@ -42,6 +44,17 @@ LRESULT CALLBACK KeyBoardMsgProc(int nCode,WPARAM wParam,LPARAM lParam)
 		fclose(fp);
 	}
 	*/
+	// 存储接收到的快捷键
+	if (wParam == WM_KEYDOWN)
+	{
+		BYTE bTmpKeys[4];
+		memcpy(&bTmpKeys, &bSaveKeys, sizeof(BYTE) * 4);
+		bSaveKeys[0] = bTmpKeys[1];
+		bSaveKeys[1] = bTmpKeys[2];
+		bSaveKeys[2] = bTmpKeys[3];
+		bSaveKeys[3] = pStruct->vkCode;
+	}
+
 	for (int i = 0; i < HOOK_NUM; i++)
 	{
 		if(g_combKey[i].count != 0)
@@ -67,7 +80,7 @@ LRESULT CALLBACK KeyBoardMsgProc(int nCode,WPARAM wParam,LPARAM lParam)
 					if(pStruct->vkCode == g_combKey[i].keys[2])
 					{
 						if((GetAsyncKeyState(g_combKey[i].keys[0])&0x8000) && 
-							(GetAsyncKeyState(g_combKey[i].keys[1])&0x8000)) //另外一个键按下
+							(GetAsyncKeyState(g_combKey[i].keys[1])&0x8000)) //另外两个键按下
 						{
 							if(g_hWnd)
 								::PostMessage(g_hWnd[i], g_msgType[i], 0, 0);  //发送给对应的窗口
@@ -82,7 +95,7 @@ LRESULT CALLBACK KeyBoardMsgProc(int nCode,WPARAM wParam,LPARAM lParam)
 					{
 						if((GetAsyncKeyState(g_combKey[i].keys[0])&0x8000) && 
 							(GetAsyncKeyState(g_combKey[i].keys[1])&0x8000) && 
-							(GetAsyncKeyState(g_combKey[i].keys[2])&0x8000)) //另外一个键按下
+							(GetAsyncKeyState(g_combKey[i].keys[2])&0x8000)) //另外三个键按下
 						{
 							if(g_hWnd)
 								::PostMessage(g_hWnd[i], g_msgType[i], 0, 0);  //发送给对应的窗口
@@ -139,6 +152,7 @@ void DLL_API SetCombKey(COMBKEY combKey[])
 
 void DLL_API SetXCombKey(int nX, COMBKEY combKey)
 {
+	memset(&bSaveKeys, 0, sizeof(BYTE) * 4);
 	if (nX >= HOOK_NUM || nX < 0)
 	{
 		return ;

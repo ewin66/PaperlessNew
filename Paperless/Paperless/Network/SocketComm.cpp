@@ -184,7 +184,7 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 				else if (0 == tran_type.compare("2"))
 				{
 					// 获取身份证正面信息
-					str.Append("\\IDPicture\\FrontPictureTmp.jpg");
+					str.Append("\\IDPicture\\FrontPictureTmp.png");
 					nRet = pPaperlessDlg->pBaseSaveCameraPic->MySaveDeskIDPic(str.GetBuffer());
 					//nRet = 0;
 					GtWriteTrace(EM_TraceDebug, "%s:%d: 获取身份证正面照返回值 return = [%d] 照片[%s]",  __FUNCTION__, __LINE__, nRet, str.GetBuffer());
@@ -204,7 +204,7 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 				else if (0 == tran_type.compare("4"))
 				{
 					// 获取 环境摄像头人像照
-// 					str.Append("\\IDPicture\\EnvPictureTmp.jpg");
+// 					str.Append("\\IDPicture\\EnvPictureTmp.png");
 // 					nRet = pPaperlessDlg->pBaseSaveCameraPic->MySaveEnvPic(str.GetBuffer());
 // 					//nRet = 0;
 // 					GtWriteTrace(EM_TraceDebug, "%s:%d: 获取人像照返回值 return = [%d] 人像照[%s]",  __FUNCTION__, __LINE__, nRet, str.GetBuffer());
@@ -231,6 +231,13 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 					GtWriteTrace(EM_TraceDebug, "%s:%d: 将要发送人像照[%s]",  __FUNCTION__, __LINE__, str.GetBuffer());
 					// 通过 环境摄像头照片，拼json报文
 					getJsonFromPic(msgStr_json_rtn, str);
+				}
+				else if (0 == tran_type.compare("6"))
+				{
+					msgStr_json_rtn["XYM"] = "000";
+					msgStr_json_rtn["XYSM"] = "成功";
+					msgStr_json_rtn["FILE_DIR"] = "C:\\Users\\mrxu\\Desktop\\img\\test.jpg";
+					msgStr_json_rtn["OTH_MSG1"] = "";
 				}
 				else
 				{
@@ -725,7 +732,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//姓名为空
-		reStr=RetMsg("05","姓名是必输项，不可为空");
+		reStr=RetMsg("001","姓名是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -739,7 +746,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//证件是否长期有效为空
-		reStr=RetMsg("06","证件是否长期有效是必输项，不可为空");
+		reStr=RetMsg("002","证件是否长期有效是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -752,7 +759,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 			if(out.empty()!=0) //true 1 false 0
 			{
 				//证件到期日为空
-				reStr=RetMsg("14","证件到期日是必输项，不可为空");
+				reStr=RetMsg("003","证件到期日是必输项，不可为空");
 				//写日志
 				return reStr;
 			}
@@ -768,7 +775,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//发证机关地区代码为空
-		reStr=RetMsg("07","发证机关地区代码是必输项，不可为空");
+		reStr=RetMsg("004","发证机关地区代码是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -782,7 +789,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//性别为空
-		reStr=RetMsg("08","性别是必输项，不可为空");
+		reStr=RetMsg("005","性别是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -795,7 +802,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//国籍为空
-		reStr=RetMsg("09","国籍是必输项，不可为空");
+		reStr=RetMsg("006","国籍是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -811,7 +818,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//移动电话为空
-			reStr=RetMsg("10","固定电话跟移动电话必输其中一项");
+			reStr=RetMsg("007","固定电话跟移动电话必输其中一项");
 			//写日志
 			return reStr;
 		}
@@ -846,7 +853,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//通讯地址为空
-		reStr=RetMsg("11","通讯地址是必输项，不可为空");
+		reStr=RetMsg("008","通讯地址是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -872,7 +879,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//职业为空
-		reStr=RetMsg("12","职业是必输项，不可为空");
+		reStr=RetMsg("009","职业是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -912,7 +919,7 @@ CString Json_060104_SendMsg(Json::Value &value)
 		{
 			//报错，紧急联系人有，紧急联系电话一定得有
 			//证件是否长期有效为空
-			reStr=RetMsg("13","存在紧急联系人，紧急联系电话则是必输项，不可为空");
+			reStr=RetMsg("010","存在紧急联系人，紧急联系电话则是必输项，不可为空");
 			//写日志
 			return reStr;
 		}
@@ -937,7 +944,7 @@ CString Json_010101_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//户名为空
-		reStr=RetMsg("02","户名是必输项，不可为空");
+		reStr=RetMsg("011","户名是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -946,7 +953,7 @@ CString Json_010101_SendMsg(Json::Value &value)
 		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		if(out.length()<2)
 		{
-			reStr=RetMsg("02","户名长度至少为2个字符(1个汉字为两个字符)");
+			reStr=RetMsg("012","户名长度至少为2个字符(1个汉字为两个字符)");
 			return reStr;
 		}
 		sendMsg+=out.c_str();
@@ -957,7 +964,7 @@ CString Json_010101_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//证件类型为空
-		reStr=RetMsg("03","证件类型是必输项，不可为空");
+		reStr=RetMsg("013","证件类型是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -965,7 +972,7 @@ CString Json_010101_SendMsg(Json::Value &value)
 	{
 		if(zjlx.find(out)==-1)
 		{
-			reStr=RetMsg("03","证件类型不存在");
+			reStr=RetMsg("014","证件类型不存在");
 			return reStr;
 		}
 		sendMsg+=out.c_str();
@@ -975,7 +982,7 @@ CString Json_010101_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//证件号码为空
-		reStr=RetMsg("04","证件号码是必输项，不可为空");
+		reStr=RetMsg("015","证件号码是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -983,7 +990,7 @@ CString Json_010101_SendMsg(Json::Value &value)
 	{
 		if(out.length()!=18)
 		{
-			reStr=RetMsg("04","证件号码是必输项，不可为空");
+			reStr=RetMsg("016","证件号码是必输项，不可为空");
 			return reStr;
 		}
 		sendMsg+=out.c_str();
@@ -1008,7 +1015,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//资费支付方为空
-		reStr=RetMsg("014","资费支付方是必输项，不可为空");
+		reStr=RetMsg("017","资费支付方是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1020,7 +1027,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//收款人姓名为空
-		reStr=RetMsg("015","收款人姓名是必输项，不可为空");
+		reStr=RetMsg("018","收款人姓名是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1033,7 +1040,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//收款人账号/卡号为空
-		reStr=RetMsg("016","收款人账号/卡号是必输项，不可为空");
+		reStr=RetMsg("019","收款人账号/卡号是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1049,7 +1056,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//汇款金额为空
-		reStr=RetMsg("017","汇款金额是必输项，不可为空");
+		reStr=RetMsg("020","汇款金额是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1065,7 +1072,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//转账类型为空
-		reStr=RetMsg("018","转账类型是必输项，不可为空");
+		reStr=RetMsg("021","转账类型是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1078,7 +1085,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//汇款人姓名为空
-		reStr=RetMsg("018","汇款人姓名是必输项，不可为空");
+		reStr=RetMsg("022","汇款人姓名是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1092,7 +1099,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//汇款人地址/电话为空
-		reStr=RetMsg("04","汇款人地址/电话是必输项，不可为空");
+		reStr=RetMsg("023","汇款人地址/电话是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1129,7 +1136,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 		if(out.empty()!=0) //true 1 false 
 		{
 			//姓名为空
-			reStr=RetMsg("05","汇款人证件号码是必输项，不可为空");
+			reStr=RetMsg("024","汇款人证件号码是必输项，不可为空");
 			//写日志
 			return reStr;
 		}
@@ -1146,7 +1153,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 
 	{
 		//新老客户标志为空
-		reStr=RetMsg("05","新老客户标志是必输项，不可为空");
+		reStr=RetMsg("025","新老客户标志是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1158,7 +1165,8 @@ CString Json_101003_SendMsg(Json::Value &value)
 			Json::Value tmp_json_rtn;//表示一个json格式的对象 
 			std::string tmp_out;
 			//新客户
-			reStr==Json_060104_SendMsg(value);
+			reStr=Json_060104_SendMsg(value);
+			GtWriteTrace(EM_TraceDebug, "客户录入返回json=[%s]", reStr.GetBuffer());
 			if(tmp_reader.parse(reStr.GetBuffer(), tmp_json_rtn))//解析出json放到json中区
 			{
 				tmp_out=tmp_json_rtn["XYM"].asString();
@@ -1179,7 +1187,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 			//老客户
 			/*if(::MessageBox(NULL,"老客户客户录入是否覆盖","提示",MB_OK|MB_OKCANCEL)==IDOK)
 			{
-				reStr==Json_060104_SendMsg(value);
+				reStr=Json_060104_SendMsg(value);
 				return reStr;
 			}*/
 		}
@@ -1199,7 +1207,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//资费支付方为空
-		reStr=RetMsg("014","资费支付方是必输项，不可为空");
+		reStr=RetMsg("026","资费支付方是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1212,7 +1220,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//收款人姓名为空
-		reStr=RetMsg("015","收款人姓名是必输项，不可为空");
+		reStr=RetMsg("027","收款人姓名是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1226,7 +1234,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//收款人账号/卡号为空
-		reStr=RetMsg("016","收款人账号/卡号是必输项，不可为空");
+		reStr=RetMsg("028","收款人账号/卡号是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1241,7 +1249,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//汇款金额为空
-		reStr=RetMsg("017","汇款金额是必输项，不可为空");
+		reStr=RetMsg("029","汇款金额是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1258,7 +1266,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//转账类型为空
-		reStr=RetMsg("018","转账类型是必输项，不可为空");
+		reStr=RetMsg("030","转账类型是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1272,7 +1280,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//汇款人账号/卡号标志为空
-		reStr=RetMsg("020","汇款人账号/卡号标志是必输项，不可为空");
+		reStr=RetMsg("031","汇款人账号/卡号标志是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1289,7 +1297,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//账户密码标志为空
-		reStr=RetMsg("021","账户密码标志是必输项，不可为空");
+		reStr=RetMsg("032","账户密码标志是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -1312,13 +1320,12 @@ CString Json_101004_SendMsg(Json::Value &value)
 	else
 	{
 		sendMsg+=out.c_str();
-		sendMsg+="\r\n";
 		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		out=value["HKRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//汇款人证件号码为空
-			reStr=RetMsg("023","汇款人证件号码是必输项，不可为空");
+			reStr=RetMsg("033","汇款人证件号码是必输项，不可为空");
 			//写日志
 			return reStr;
 		}
@@ -1361,15 +1368,18 @@ CString Json_101004_SendMsg(Json::Value &value)
 	{
 		if(0==strcmp(out.c_str(),"2"))
 		{
+			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 		}
 		else if(0==strcmp(out.c_str(),"1"))
 		{
-			out=value["XM"].asString();
+			sendMsg+=out.c_str();
+			sendMsg+="\r\n";
+			out=value["DLRXM"].asString();
 			if(out.empty()!=0) //true 1 false 0
 			{
 				//姓名为空
-				reStr=RetMsg("024","姓名是必输项，不可为空");
+				reStr=RetMsg("034","姓名是必输项，不可为空");
 				return reStr;
 			}
 			else 
@@ -1377,36 +1387,37 @@ CString Json_101004_SendMsg(Json::Value &value)
 				sendMsg+=out.c_str();
 				sendMsg+="\r\n";
 			}
-			out=value["ZJLX"].asString();
+			out=value["DLRZJLX"].asString();
 			if(out.empty()!=0) //true 1 false 0
 			{
 				//证件类型为空
-				reStr=RetMsg("025","证件类型是必输项，不可为空");
+				reStr=RetMsg("035","证件类型是必输项，不可为空");
 				return reStr;
 			}
 			else 
 			{
 				sendMsg+=out.c_str();
 			}
-			out=value["ZJHM"].asString();
+			out=value["DLRZJHM"].asString();
 			if(out.empty()!=0) //true 1 false 0
 			{
 				//证件号码为空
-				reStr=RetMsg("026","证件号码是必输项，不可为空");
+				reStr=RetMsg("036","证件号码是必输项，不可为空");
 				return reStr;
 			}
 			else 
 			{
 				sendMsg+=out.c_str();
 				sendMsg+="\r\n";
+				sendMsg+="\r\n";
 				sendMsg+=out.c_str();
 				sendMsg+="\r\n";
 			}
-			out=value["LXDH"].asString();
+			out=value["DLRLXDH"].asString();
 			if(out.empty()!=0) //true 1 false 0
 			{
 				//联系电话为空
-				reStr=RetMsg("027","联系电话是必输项，不可为空");
+				reStr=RetMsg("037","联系电话是必输项，不可为空");
 				return reStr;
 			}
 			else 
@@ -1598,7 +1609,7 @@ CString Json_101005_SendMsg(Json::Value &value)
 			Json::Value tmp_json_rtn;//表示一个json格式的对象 
 			std::string tmp_out;
 			//新客户
-			reStr==Json_060104_SendMsg(value);
+			reStr=Json_060104_SendMsg(value);
 			if(tmp_reader.parse(reStr.GetBuffer(), tmp_json_rtn))//解析出json放到json中区
 			{
 				tmp_out=tmp_json_rtn["XYM"].asString();
@@ -1620,7 +1631,7 @@ CString Json_101005_SendMsg(Json::Value &value)
 			//老客户
 			/*if(::MessageBox(NULL,"老客户客户录入是否覆盖","提示",MB_OK|MB_OKCANCEL)==IDOK)
 			{
-				reStr==Json_060104_SendMsg(value);
+				reStr=Json_060104_SendMsg(value);
 				return reStr;
 			}*/
 			sendMsg+='&';
@@ -1639,7 +1650,8 @@ CString Json_101005_SendMsg(Json::Value &value)
 	{
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		out=value["ZJLX"].asString();
+		sendMsg+="\r\n";
+		out=value["DLRZJLX"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//证件类型为空
@@ -1650,7 +1662,7 @@ CString Json_101005_SendMsg(Json::Value &value)
 		{
 			sendMsg+=out.c_str();
 		}
-		out=value["ZJHM"].asString();
+		out=value["DLRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//证件号码为空
@@ -1665,7 +1677,7 @@ CString Json_101005_SendMsg(Json::Value &value)
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 		}
-		out=value["LXDH"].asString();
+		out=value["DLRLXDH"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//联系电话为空
@@ -1700,6 +1712,7 @@ CString Json_101006_SendMsg(Json::Value &value)
 	else
 	{
 		sendMsg+=out.c_str();
+		sendMsg+="\r\n";
 	}
 	out=value["HCZHKHBZ"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1840,7 +1853,7 @@ CString Json_101006_SendMsg(Json::Value &value)
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 		sendMsg+="\r\n";
-		out=value["ZJLX"].asString();
+		out=value["DLRZJLX"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//证件类型为空
@@ -1851,7 +1864,7 @@ CString Json_101006_SendMsg(Json::Value &value)
 		{
 			sendMsg+=out.c_str();
 		}
-		out=value["ZJHM"].asString();
+		out=value["DLRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//证件号码为空
@@ -1866,7 +1879,7 @@ CString Json_101006_SendMsg(Json::Value &value)
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 		}
-		out=value["LXDH"].asString();
+		out=value["DLRLXDH"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
 			//联系电话为空
@@ -1934,6 +1947,7 @@ CString Json_970101_SendMsg(Json::Value &value)
 	reStr=RetMsg("000","发送成功");
 	return reStr;
 }
+
 int SendToWindows()
 {
 	// 自动填单交易进行处理
@@ -2128,7 +2142,7 @@ CString JsonToSendMsg(string str)
 	{
 		GtWriteTrace(EM_TraceDebug,"error = [%s]", (reader.getFormatedErrorMessages()).c_str());
 		//解析失败
-		reStr=RetMsg("99","解析失败");
+		reStr=RetMsg("9999","解析失败");
 		return reStr;
 	}
 }
