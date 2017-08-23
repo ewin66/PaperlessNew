@@ -8,7 +8,7 @@
 HANDLE g_hIoRes = NULL;
 CString msgStr = "";
 CString sendMsg="";
-std::string zjlx="10,11,21,22,23,31,32,40,50,51,60,61,99";
+std::string ZJLX="10,11,21,22,23,31,32,40,50,51,60,61,99";
 CString wname;
 int long_time_interval, short_time_interval;
 HWND hWnd;
@@ -157,26 +157,30 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 					MYPERSONINFO pMyPerson;
 					memset(&pMyPerson, 0, sizeof(MYPERSONINFO));
 					str.Append("\\IDPicture\\HeadPictureTmp.jpg");
+//#define YCP_LOCAl_TEST
+#ifdef YCP_LOCAl_TEST
+					nRet = 0;
+					memcpy(pMyPerson.address, "福建省大田县上京镇三阳村13-1号", sizeof(pMyPerson.address));
+					memcpy(pMyPerson.appendMsg, "", sizeof(pMyPerson.appendMsg));
+					memcpy(pMyPerson.birthday, "19941022", sizeof(pMyPerson.birthday));
+					memcpy(pMyPerson.cardId, "350425199410220517", sizeof(pMyPerson.cardId));
+					memcpy(pMyPerson.cardType, "", sizeof(pMyPerson.cardType));
+					memcpy(pMyPerson.EngName, "", sizeof(pMyPerson.EngName));
+					memcpy(pMyPerson.govCode, "", sizeof(pMyPerson.govCode));
+					pMyPerson.iFlag = 0;
+					memcpy(pMyPerson.name, "叶长鹏", sizeof(pMyPerson.name));
+					memcpy(pMyPerson.nation, "汉", sizeof(pMyPerson.nation));
+					memcpy(pMyPerson.nationCode, "", sizeof(pMyPerson.nationCode));
+					memcpy(pMyPerson.otherData, "", sizeof(pMyPerson.otherData));
+					memcpy(pMyPerson.police, "大田县公安局", sizeof(pMyPerson.police));
+					memcpy(pMyPerson.sex, "男", sizeof(pMyPerson.sex));
+					memcpy(pMyPerson.sexCode, "", sizeof(pMyPerson.sexCode));
+					memcpy(pMyPerson.validEnd, "20201221", sizeof(pMyPerson.validEnd));
+					memcpy(pMyPerson.validStart, "20101221", sizeof(pMyPerson.validStart));
+					memcpy(pMyPerson.version, "", sizeof(pMyPerson.version));
+#else
 					nRet = pPaperlessDlg->pBaseReadIDCardInfo->MyReadIDCardInfo(str.GetBuffer(), &pMyPerson);
-// 					nRet = 0;
-// 					memcpy(pMyPerson.address, "福建省大田县上京镇三阳村13-1号", sizeof(pMyPerson.address));
-// 					memcpy(pMyPerson.appendMsg, "", sizeof(pMyPerson.appendMsg));
-// 					memcpy(pMyPerson.birthday, "19941022", sizeof(pMyPerson.birthday));
-// 					memcpy(pMyPerson.cardId, "350425199410220517", sizeof(pMyPerson.cardId));
-// 					memcpy(pMyPerson.cardType, "", sizeof(pMyPerson.cardType));
-// 					memcpy(pMyPerson.EngName, "", sizeof(pMyPerson.EngName));
-// 					memcpy(pMyPerson.govCode, "", sizeof(pMyPerson.govCode));
-// 					pMyPerson.iFlag = 0;
-// 					memcpy(pMyPerson.name, "叶长鹏", sizeof(pMyPerson.name));
-// 					memcpy(pMyPerson.nation, "汉", sizeof(pMyPerson.nation));
-// 					memcpy(pMyPerson.nationCode, "", sizeof(pMyPerson.nationCode));
-// 					memcpy(pMyPerson.otherData, "", sizeof(pMyPerson.otherData));
-// 					memcpy(pMyPerson.police, "大田县公安局", sizeof(pMyPerson.police));
-// 					memcpy(pMyPerson.sex, "男", sizeof(pMyPerson.sex));
-// 					memcpy(pMyPerson.sexCode, "", sizeof(pMyPerson.sexCode));
-// 					memcpy(pMyPerson.validEnd, "20201221", sizeof(pMyPerson.validEnd));
-// 					memcpy(pMyPerson.validStart, "20101221", sizeof(pMyPerson.validStart));
-// 					memcpy(pMyPerson.version, "", sizeof(pMyPerson.version));
+#endif
 					// 通过个人信息头像路径和返回值拼json报文
 					GtWriteTrace(EM_TraceDebug, "%s:%d: 获取身份证芯片信息返回值 return = [%d] 芯片照[%s]",  __FUNCTION__, __LINE__, nRet, str.GetBuffer());
 					getIDCardInfoJson(msgStr_json_rtn, str, &pMyPerson, nRet);
@@ -184,9 +188,12 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 				else if (0 == tran_type.compare("2"))
 				{
 					// 获取身份证正面信息
-					str.Append("\\IDPicture\\FrontPictureTmp.png");
+					str.Append("\\IDPicture\\FrontPictureTmp.jpg");
+#ifdef YCP_LOCAl_TEST
+					nRet = 0;
+#else
 					nRet = pPaperlessDlg->pBaseSaveCameraPic->MySaveDeskIDPic(str.GetBuffer());
-					//nRet = 0;
+#endif
 					GtWriteTrace(EM_TraceDebug, "%s:%d: 获取身份证正面照返回值 return = [%d] 照片[%s]",  __FUNCTION__, __LINE__, nRet, str.GetBuffer());
 					// 通过身份证正面信息返回值拼json报文
 					getIDPicJson(msgStr_json_rtn, 0, str, nRet);
@@ -195,8 +202,11 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 				{
 					// 获取身份证反面信息
 					str.Append("\\IDPicture\\BackPictureTmp.jpg");
+#ifdef YCP_LOCAl_TEST
+					nRet = 0;
+#else
 					nRet = pPaperlessDlg->pBaseSaveCameraPic->MySaveDeskIDPic(str.GetBuffer());
-					//nRet = 0;
+#endif
 					GtWriteTrace(EM_TraceDebug, "%s:%d: 获取身份证反面照返回值 return = [%d] 照片[%s]",  __FUNCTION__, __LINE__, nRet, str.GetBuffer());
 					// 通过身份证反面信息返回值拼json报文
 					getIDPicJson(msgStr_json_rtn, 1, str, nRet);
@@ -216,8 +226,11 @@ void __stdcall ReadEvt(LPVOID lpParam, HANDLE hObject, PCHAR buf, DWORD len)
 					strncpy(sFilename, "EnvPictureTmp.jpg", sizeof(sFilename)-1);
 					str.Append("\\IDPicture\\");
 					str.Append(sFilename);
+#ifdef YCP_LOCAl_TEST
+					nRet = 0;
+#else
 					nRet = pPaperlessDlg->pBaseSaveCameraPic->MySaveEnvPic(str.GetBuffer());
-					//nRet = 0;
+#endif
  					GtWriteTrace(EM_TraceDebug, "%s:%d: 获取人像照返回值 return = [%d] 人像照[%s]",  __FUNCTION__, __LINE__, nRet, str.GetBuffer());
 					// 通过 环境摄像头本地路径和返回值拼json报文
 					getJsonFromPersonPic(msgStr_json_rtn, str, sFilename, nRet);
@@ -722,7 +735,6 @@ CString RetMsg(string xym,string xynr)
 	ret_str = msgStr_rtn.c_str();
 	return ret_str;
 }
-
 CString Json_060104_SendMsg(Json::Value &value)
 {
 	Json::Reader reader;//json解析
@@ -738,9 +750,24 @@ CString Json_060104_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		//不能包含数字
+		bool bIsDigit=FALSE;; 
+		for(int i=0;i<out.length();i++)
+		{
+			if(isdigit(out.at(i)))
+			{
+				GtWriteTrace(EM_TraceDebug,"%s",out.c_str());
+				bIsDigit=TRUE;
+				break;
+			}
+		}
+		if(bIsDigit==TRUE)
+		{
+			reStr=RetMsg("018","姓名(英文/拼音):不能包含数字");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["ZJSFCQYX"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -752,7 +779,15 @@ CString Json_060104_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out!="1" && out!="2")
+		{
+			//证件到期日为空
+			reStr=RetMsg("003","证件是否长期有效:输入数据不存在");
+			//写日志
+			return reStr;
+		}
 		sendMsg+=out.c_str();
+		
 		if(out=="2")
 		{
 			out=value["ZJDQR"].asString();
@@ -783,7 +818,6 @@ CString Json_060104_SendMsg(Json::Value &value)
 	{
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["XB"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -795,8 +829,12 @@ CString Json_060104_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out!="1" && out!="2")
+		{
+			reStr=RetMsg("004","性别：输入数据不存在");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["GJ"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -809,7 +847,6 @@ CString Json_060104_SendMsg(Json::Value &value)
 	else
 	{
 		sendMsg+=out.c_str();
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["GDDH"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -824,17 +861,21 @@ CString Json_060104_SendMsg(Json::Value &value)
 		}
 		else
 		{
+			if(out.length()!=11)
+			{
+				reStr=RetMsg("007","移动电话:清输入11位长度");
+				//写日志
+				return reStr;
+			}
 			sendMsg+="\r\n";
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
-			//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		}
 	}
 	else
 	{
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		out=value["YDDH"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
@@ -843,9 +884,14 @@ CString Json_060104_SendMsg(Json::Value &value)
 		}
 		else
 		{
+			if(out.length()!=11)
+			{
+				reStr=RetMsg("007","移动电话:清输入11位长度");
+				//写日志
+				return reStr;
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
-			//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		}
 	}
 	
@@ -859,9 +905,13 @@ CString Json_060104_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out.length()<4)
+		{
+			reStr=RetMsg("012","通讯地址长度至少为4个字符(1个汉字为2个字符)");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["YZBM"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -871,9 +921,13 @@ CString Json_060104_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out.length()!=6)
+		{
+			reStr=RetMsg("012","邮政编码为6位数字");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["ZY"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -885,49 +939,13 @@ CString Json_060104_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		sendMsg+=out.c_str();
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-	}
-	out=value["JJLXR"].asString();
-	if(out.empty()!=0) //true 1 false 0
-	{
-		//不报错
-		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-		/*out=value["JJLXDH"].asString();
-		if(out.empty()!=0) //true 1 false 0
+		if(atoi(out.c_str())<1 || atoi(out.c_str())>8)
 		{
-			//不报错，紧急联系人有，紧急联系电话一定得有，紧急联系人没有，紧急联系电话就不用输入
-			//证件是否长期有效为空
-			reStr=RetMsg("13","存在紧急联系人，紧急联系电话则是必输项，不可为空");
+			reStr=RetMsg("009","职业输入数据不存在");
 			//写日志
 			return reStr;
 		}
-		else
-		{
-			sendMsg+=out.c_str();
-			//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-		}*/
-	}
-	else
-	{
 		sendMsg+=out.c_str();
-		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-		out=value["JJLXDH"].asString();
-		if(out.empty()!=0) //true 1 false 0
-		{
-			//报错，紧急联系人有，紧急联系电话一定得有
-			//证件是否长期有效为空
-			reStr=RetMsg("010","存在紧急联系人，紧急联系电话则是必输项，不可为空");
-			//写日志
-			return reStr;
-		}
-		else
-		{
-			sendMsg+=out.c_str();
-			//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-		}
 	}
 	reStr=RetMsg("000","发送成功");
 	return reStr;
@@ -937,14 +955,14 @@ CString Json_010101_SendMsg(Json::Value &value)
 {
 	Json::Reader reader;//json解析
 	std::string out="";
+	std::string zjlx="";
 	sendMsg+=out.c_str();
 	CString reStr="";
-	//GtWriteTrace(EM_TraceDebug,"%s",sendMsg.GetBuffer());
 	out=value["HM"].asString();
 	if(out.empty()!=0) //true 1 false 0
 	{
 		//户名为空
-		reStr=RetMsg("011","户名是必输项，不可为空");
+		reStr=RetMsg("002","户名是必输项，不可为空");
 		//写日志
 		return reStr;
 	}
@@ -953,15 +971,15 @@ CString Json_010101_SendMsg(Json::Value &value)
 		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		if(out.length()<2)
 		{
-			reStr=RetMsg("012","户名长度至少为2个字符(1个汉字为两个字符)");
+			reStr=RetMsg("012","户名长度至少为2个字符(1个汉字为2个字符)");
 			return reStr;
 		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
-	out=value["ZJLX"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zjlx=value["ZJLX"].asString();
+	if(zjlx.empty()!=0) //true 1 false 0
 	{
 		//证件类型为空
 		reStr=RetMsg("013","证件类型是必输项，不可为空");
@@ -970,13 +988,12 @@ CString Json_010101_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		if(zjlx.find(out)==-1)
+		if(ZJLX.find(zjlx)==-1)
 		{
 			reStr=RetMsg("014","证件类型不存在");
 			return reStr;
 		}
-		sendMsg+=out.c_str();
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
+		sendMsg+=zjlx.c_str();
 	}
 	out=value["ZJHM"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -988,19 +1005,38 @@ CString Json_010101_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		if(out.length()!=18)
+		if(zjlx=="10")
 		{
-			reStr=RetMsg("016","证件号码是必输项，不可为空");
-			return reStr;
+			if(out.length()!=18)
+			{
+				reStr=RetMsg("016","身份证只能18位");
+				return reStr;
+			}
 		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 		sendMsg+="\r\n";
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
+	Json::Reader tmp_reader;//json解析
+	Json::Value tmp_json_rtn;//表示一个json格式的对象 
+	std::string tmp_out;
 	reStr=Json_060104_SendMsg(value);
+	if(tmp_reader.parse(reStr.GetBuffer(), tmp_json_rtn))//解析出json放到json中区
+	{
+		tmp_out=tmp_json_rtn["XYM"].asString();
+		GtWriteTrace(EM_TraceDebug, "响应码=[%s]", tmp_out.c_str());
+		if(0 != strcmp(tmp_out.c_str(), "000"))
+		{
+			return reStr;
+		}
+	}
+	else
+	{
+		reStr=RetMsg("999","解析失败");
+		return reStr;
+	}
 	return reStr;
 }
 
@@ -1008,6 +1044,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 {
 	Json::Reader reader;//json解析
 	std::string out="";
+	std::string zjlx="";
 	sendMsg+=out.c_str();
 	CString reStr="";
 
@@ -1021,6 +1058,12 @@ CString Json_101003_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out!="1"&&out!="2")
+		{
+			reStr=RetMsg("017","资费支付方：输入数据不存在");
+			//写日志
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 	}
 	out=value["SKRXM"].asString();
@@ -1078,6 +1121,11 @@ CString Json_101003_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(atoi(out.c_str())<1||atoi(out.c_str())>3)
+		{
+			reStr=RetMsg("021","转账类型:输入数据不存在");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 	}
@@ -1086,7 +1134,6 @@ CString Json_101003_SendMsg(Json::Value &value)
 	{
 		//汇款人姓名为空
 		reStr=RetMsg("022","汇款人姓名是必输项，不可为空");
-		//写日志
 		return reStr;
 	}
 	else
@@ -1109,29 +1156,21 @@ CString Json_101003_SendMsg(Json::Value &value)
 		sendMsg+="\r\n";
 	}
 
-	out=value["HKRZJLX"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zjlx=value["HKRZJLX"].asString();
+	if(zjlx.empty()!=0) //true 1 false 0
 	{
 		sendMsg+="\r\n";
 		//跳过是否输入辅助证件
 		sendMsg+="\r\n";
-		/*out=value["SFSRFZZJ"].asString();
-		if(out.empty()!=0) //true 1 false 0
-		{
-			//是否输入辅助证件为空,默认为2-否
-			sendMsg+="\r\n";
-		}
-		else
-		{
-			sendMsg+=out.c_str();
-			sendMsg+="\r\n";
-			reStr=RetMsg("000","发送成功");
-			return reStr;
-		}*/
 	}
 	else
 	{
-		sendMsg+=out.c_str();
+		if(ZJLX.find(zjlx)==-1)
+		{
+			reStr=RetMsg("014","汇款人证件类型不存在");
+			return reStr;
+		}
+		sendMsg+=zjlx.c_str();
 		out=value["HKRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 
 		{
@@ -1142,6 +1181,14 @@ CString Json_101003_SendMsg(Json::Value &value)
 		}
 		else
 		{
+			if(zjlx=="10")
+			{
+				if(out.length()!=18)
+				{
+					reStr=RetMsg("016","身份证只能18位");
+					return reStr;
+				}
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 			sendMsg+="\r\n";
@@ -1178,7 +1225,7 @@ CString Json_101003_SendMsg(Json::Value &value)
 			}
 			else
 			{
-				reStr=RetMsg("9999","解析失败");
+				reStr=RetMsg("999","解析失败");
 				return reStr;
 			}
 		}
@@ -1200,6 +1247,7 @@ CString Json_101004_SendMsg(Json::Value &value)
 {
 	Json::Reader reader;//json解析
 	std::string out="";
+	std::string zjlx="";
 	sendMsg+=out.c_str();
 	CString reStr="";	
 
@@ -1213,8 +1261,13 @@ CString Json_101004_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out!="1"&&out!="2")
+		{
+			reStr=RetMsg("017","资费支付方：输入数据不存在");
+			//写日志
+			return reStr;
+		}
 		sendMsg+=out.c_str();
-		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["SKRXM"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1226,9 +1279,14 @@ CString Json_101004_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out.length()<4)
+		{
+			reStr=RetMsg("027","收款人姓名:长度小于4位，请重输");
+			//写日志
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["SKRZKH"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1243,7 +1301,6 @@ CString Json_101004_SendMsg(Json::Value &value)
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 		sendMsg+=out.c_str();
-		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["HKJE"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1260,7 +1317,6 @@ CString Json_101004_SendMsg(Json::Value &value)
 		sendMsg+="\r\n";
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 	}
 	out=value["ZZLX"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1272,26 +1328,13 @@ CString Json_101004_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(atoi(out.c_str())<1||atoi(out.c_str())>3)
+		{
+			reStr=RetMsg("021","转账类型:输入数据不存在");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
-		GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-	}
-	out=value["HKRZKHBZ"].asString();
-	if(out.empty()!=0) //true 1 false 0
-	{
-		//汇款人账号/卡号标志为空
-		reStr=RetMsg("031","汇款人账号/卡号标志是必输项，不可为空");
-		//写日志
-		return reStr;
-	}
-	else
-	{
-		if(0==strcmp(out.c_str(),"C_BZ"))
-		{
-			//发送第一段内容
-			GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
-		}
-		
 	}
 	out=value["ZHMMBZ"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1303,24 +1346,32 @@ CString Json_101004_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		if(0==strcmp(out.c_str(),"MM_BZ"))
+		if(0==strcmp(out.c_str(),"ZHMM_BZ"))
 		{
-			//
 			sendMsg+='&';
-			GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
+		}
+		else
+		{
+			reStr=RetMsg("032","账户密码标志输入值有误");
+			//写日志
+			return reStr;
 		}
 		
 	}
-	out=value["HKRZJLX"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zjlx=value["HKRZJLX"].asString();
+	if(zjlx.empty()!=0) //true 1 false 0
 	{
 		//汇款人证件类型为空，直接跳到是否输入辅助证件
 		sendMsg+="\r\n";
 	}
 	else
 	{
-		sendMsg+=out.c_str();
-		//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
+		if(ZJLX.find(zjlx)==-1)
+		{
+			reStr=RetMsg("014","汇款人证件类型不存在");
+			return reStr;
+		}
+		sendMsg+=zjlx.c_str();
 		out=value["HKRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
@@ -1331,33 +1382,20 @@ CString Json_101004_SendMsg(Json::Value &value)
 		}
 		else
 		{
+			if(zjlx=="10")
+			{
+				if(out.length()!=18 && out.length()!=15)
+				{
+					reStr=RetMsg("016","身份证只能15位或18位");
+					return reStr;
+				}
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
-			//GtWriteTrace(EM_TraceDebug,"%s",sendMsg);
 		}
 	}
 	//跳过是否输入辅助证件
 	sendMsg+="\r\n";
-/*	out=value["SFSRFZZJ"].asString();
-	if(out.empty()!=0) //true 1 false 0
-	{
-		//是否输入辅助证件为空,默认为2-否
-		sendMsg+="\r\n";
-	}
-	else
-	{
-		if(0==strcmp(out.c_str(),"2"))
-		{
-			sendMsg+="\r\n";
-		}
-		else if(0==strcmp(out.c_str(),"1"))
-		{
-			//是否输入辅助证件为空,默认为2-否
-			sendMsg+="\r\n";
-			sendMsg+='&';
-		}
-	}
-	*/
 	out=value["SFDLRDB"].asString();
 	if(out.empty()!=0) //true 1 false 0
 	{
@@ -1366,12 +1404,17 @@ CString Json_101004_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		if(0==strcmp(out.c_str(),"2"))
+		if(out!="1"&&out!="2")
+		{
+			reStr=RetMsg("016","是否代理人代办输入数据有误");
+			return reStr;
+		}
+		if(out=="2")
 		{
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 		}
-		else if(0==strcmp(out.c_str(),"1"))
+		else if(out=="1")
 		{
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
@@ -1384,11 +1427,45 @@ CString Json_101004_SendMsg(Json::Value &value)
 			}
 			else 
 			{
+				if(out.length()<2)
+				{
+					reStr=RetMsg("034","代理人姓名：长度至少为2个字符(1个汉字为2个字符)");
+					return reStr;
+				}
+				GtWriteTrace(EM_TraceDebug,"%s",out.c_str());
+				//不能全由数字组成
+				bool bIsNotDigit=FALSE;; 
+				char is_c_flag=0;
+				char szchinese[3] = {0}; 
+				for(int i=0;i<out.length();i++)
+				{
+					GtWriteTrace(EM_TraceDebug,"[%d]%c",i,out.at(i));
+					if(out.at(i)&0x80)
+					{
+						szchinese[is_c_flag]=out.at(i);
+						is_c_flag++;
+						
+						if(is_c_flag==2)
+						{
+							GtWriteTrace(EM_TraceDebug,"%s",szchinese);
+							memset(szchinese,0x00,sizeof(szchinese));
+							bIsNotDigit=TRUE;
+							is_c_flag=0;
+							break;
+						}
+					}
+				}
+				if(bIsNotDigit==FALSE)
+				{
+						//GtWriteTrace(EM_TraceDebug,"代理人姓名:不能全由数字组成");
+					reStr=RetMsg("018","代理人姓名:不能全由数字组成");
+					return reStr;
+				}
 				sendMsg+=out.c_str();
 				sendMsg+="\r\n";
 			}
-			out=value["DLRZJLX"].asString();
-			if(out.empty()!=0) //true 1 false 0
+			zjlx=value["DLRZJLX"].asString();
+			if(zjlx.empty()!=0) //true 1 false 0
 			{
 				//证件类型为空
 				reStr=RetMsg("035","证件类型是必输项，不可为空");
@@ -1396,7 +1473,12 @@ CString Json_101004_SendMsg(Json::Value &value)
 			}
 			else 
 			{
-				sendMsg+=out.c_str();
+				if(ZJLX.find(zjlx)==-1)
+				{
+					reStr=RetMsg("014","汇款人证件类型不存在");
+					return reStr;
+				}
+				sendMsg+=zjlx.c_str();
 			}
 			out=value["DLRZJHM"].asString();
 			if(out.empty()!=0) //true 1 false 0
@@ -1407,6 +1489,14 @@ CString Json_101004_SendMsg(Json::Value &value)
 			}
 			else 
 			{
+				if(zjlx=="10")
+				{
+					if(out.length()!=18)
+					{
+						reStr=RetMsg("016","身份证只能18位");
+						return reStr;
+					}
+				}
 				sendMsg+=out.c_str();
 				sendMsg+="\r\n";
 				sendMsg+="\r\n";
@@ -1422,6 +1512,11 @@ CString Json_101004_SendMsg(Json::Value &value)
 			}
 			else 
 			{
+				if(out.length()<9)
+				{
+					reStr=RetMsg("016","联系电话：请输入至少9位字符(含区号)");
+					return reStr;
+				}
 				sendMsg+=out.c_str();
 			}
 		}
@@ -1434,11 +1529,14 @@ CString Json_101005_SendMsg(Json::Value &value)
 {
 	Json::Reader reader;//json解析
 	std::string out="";
+	std::string zjlx="";
+	std::string hkfs="";
+	std::string zfzff="";
 	sendMsg+=out.c_str();
 	CString reStr="";
 
-	out=value["HKFS"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	hkfs=value["HKFS"].asString();
+	if(hkfs.empty()!=0) //true 1 false 0
 	{
 		//汇款方式为空
 		reStr=RetMsg("014","汇款方式是必输项，不可为空");
@@ -1447,10 +1545,16 @@ CString Json_101005_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		sendMsg+=out.c_str();
+		if(hkfs!="1"&&hkfs!="2")
+		{
+			reStr=RetMsg("017","汇款方式：输入数据不存在");
+			//写日志
+			return reStr;
+		}
+		sendMsg+=hkfs.c_str();
 	}
-	out=value["ZFZFF"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zfzff=value["ZFZFF"].asString();
+	if(zfzff.empty()!=0) //true 1 false 0
 	{
 		//资费支付方为空
 		reStr=RetMsg("014","资费支付方是必输项，不可为空");
@@ -1459,7 +1563,13 @@ CString Json_101005_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		sendMsg+=out.c_str();
+		if(zfzff!="1"&&zfzff!="2")
+		{
+			reStr=RetMsg("017","资费支付方：输入数据不存在");
+			//写日志
+			return reStr;
+		}
+		sendMsg+=zfzff.c_str();
 	}
 	out=value["SKDWMC"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1510,8 +1620,84 @@ CString Json_101005_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(atoi(out.c_str())<1||atoi(out.c_str())>3)
+		{
+			reStr=RetMsg("021","转账类型:输入数据不存在");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
+	}
+	if(0==strcmp(hkfs.c_str(),"2"))
+	{
+		/*out=value["ZPRZLSH"].asString();
+		if(out.empty()!=0) //true 1 false 0
+		{
+			//支票入账流水号为空
+			reStr=RetMsg("018","支票入账流水号是必输项，不可为空");
+			//写日志
+			return reStr;
+		}
+		else
+		{
+			if(out.length()!=17)
+			{
+				//支票入账流水号长度错误
+				reStr=RetMsg("018","支票入账流水号:请输入17位数字或字母");
+				return reStr;
+			}
+			sendMsg+=out.c_str();
+			sendMsg+="\r\n";
+		}
+		out=value["RZRQ"].asString();
+		if(out.empty()!=0) //true 1 false 0
+		{
+			//入账日期为空
+			reStr=RetMsg("018","入账日期是必输项，不可为空");
+			//写日志
+			return reStr;
+		}
+		else
+		{
+			//入账日期不能大于交易日期
+			sendMsg+=out.c_str();
+			sendMsg+="\r\n";
+		}*/
+		out=value["ZPLSHBZ"].asString();
+		if(out.empty()!=0) //true 1 false 0
+		{
+			//支票流水号标志为空
+			reStr=RetMsg("018","支票流水号标志是必输项，不可为空");
+			return reStr;
+		}
+		else
+		{
+			if(out!="ZPLSH_BZ")
+			{
+				//支票流水号标志为空
+				reStr=RetMsg("018","支票流水号标志输入有误");
+				return reStr;
+			}
+			sendMsg+="&";
+		}
+		
+	}
+	
+	if(zfzff=="2")
+	{
+		out=value["XYH"].asString();
+		if(out.empty()!=0) //true 1 false 0
+		{
+			//协议号为空
+			reStr=RetMsg("018","协议号是必输项，不可为空");
+			//写日志
+			return reStr;
+		}
+		else
+		{
+			sendMsg+=out.c_str();
+			sendMsg+="\r\n";
+		}
 	}
 
 	out=value["FY"].asString();
@@ -1535,6 +1721,12 @@ CString Json_101005_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out.length()<2)
+		{
+			reStr=RetMsg("018","汇款人姓名:长度至少为2个字符(1个汉字两个字符)");
+			//写日志
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 	}
@@ -1553,28 +1745,21 @@ CString Json_101005_SendMsg(Json::Value &value)
 		sendMsg+="\r\n";
 	}
 
-	out=value["HKRZJLX"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zjlx=value["HKRZJLX"].asString();
+	if(zjlx.empty()!=0) //true 1 false 0
 	{
 		sendMsg+="\r\n";
 		//跳过是否输入辅助证件
 		sendMsg+="\r\n";
-		/*out=value["SFSRFZZJ"].asString();
-		if(out.empty()!=0) //true 1 false 0
-		{
-			//是否输入辅助证件为空,默认为2-否
-			sendMsg+="\r\n";
-		}
-		else
-		{
-			sendMsg+=out.c_str();
-			sendMsg+="\r\n";
-			sendMsg+='&';
-		}*/
 	}
 	else
 	{
-		sendMsg+=out.c_str();
+		if(ZJLX.find(zjlx)==-1)
+		{
+			reStr=RetMsg("014","汇款人证件类型不存在");
+			return reStr;
+		}
+		sendMsg+=zjlx.c_str();
 		sendMsg+="\r\n";
 		out=value["HKRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 
@@ -1586,6 +1771,14 @@ CString Json_101005_SendMsg(Json::Value &value)
 		}
 		else
 		{
+			if(zjlx=="10")
+			{
+				if(out.length()!=18 && out.length()!=15)
+				{
+					reStr=RetMsg("016","身份证只能15位或18位");
+					return reStr;
+				}
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 			sendMsg+="\r\n";
@@ -1621,7 +1814,7 @@ CString Json_101005_SendMsg(Json::Value &value)
 			}
 			else
 			{
-				reStr=RetMsg("9999","解析失败");
+				reStr=RetMsg("999","解析失败");
 				return reStr;
 			}
 			sendMsg+='&';
@@ -1648,11 +1841,44 @@ CString Json_101005_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out.length()<2)
+		{
+			reStr=RetMsg("025","代理人姓名：长度至少为2个字符(1个汉字两个字符)");
+			return reStr;
+		}
+		//不能全由数字组成
+		bool bIsNotDigit=FALSE;; 
+		char is_c_flag=0;
+		char szchinese[3] = {0}; 
+		for(int i=0;i<out.length();i++)
+		{
+			GtWriteTrace(EM_TraceDebug,"[%d]%c",i,out.at(i));
+			if(out.at(i)&0x80)
+			{
+				szchinese[is_c_flag]=out.at(i);
+				is_c_flag++;
+						
+				if(is_c_flag==2)
+				{
+					GtWriteTrace(EM_TraceDebug,"%s",szchinese);
+					memset(szchinese,0x00,sizeof(szchinese));
+					bIsNotDigit=TRUE;
+					is_c_flag=0;
+					break;
+				}
+			}
+		}
+		if(bIsNotDigit==FALSE)
+		{
+				//GtWriteTrace(EM_TraceDebug,"代理人姓名:不能全由数字组成");
+			reStr=RetMsg("018","代理人姓名:不能全由数字组成");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 		sendMsg+="\r\n";
-		out=value["DLRZJLX"].asString();
-		if(out.empty()!=0) //true 1 false 0
+		zjlx=value["DLRZJLX"].asString();
+		if(zjlx.empty()!=0) //true 1 false 0
 		{
 			//证件类型为空
 			reStr=RetMsg("025","证件类型是必输项，不可为空");
@@ -1660,7 +1886,12 @@ CString Json_101005_SendMsg(Json::Value &value)
 		}
 		else 
 		{
-			sendMsg+=out.c_str();
+			if(ZJLX.find(zjlx)==-1)
+			{
+				reStr=RetMsg("014","汇款人证件类型不存在");
+				return reStr;
+			}
+			sendMsg+=zjlx.c_str();
 		}
 		out=value["DLRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
@@ -1671,6 +1902,14 @@ CString Json_101005_SendMsg(Json::Value &value)
 		}
 		else 
 		{
+			if(zjlx=="10")
+			{
+				if(out.length()!=18 && out.length()!=15)
+				{
+					reStr=RetMsg("016","身份证只能为18位");
+					return reStr;
+				}
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 			sendMsg+="\r\n";
@@ -1686,6 +1925,11 @@ CString Json_101005_SendMsg(Json::Value &value)
 		}
 		else 
 		{
+			if(out.length()<9)
+			{
+				reStr=RetMsg("027","联系电话:请输入至少9位字符(含区号)");
+				return reStr;
+			}
 			sendMsg+=out.c_str();
 		}
 	}
@@ -1698,11 +1942,13 @@ CString Json_101006_SendMsg(Json::Value &value)
 {
 	Json::Reader reader;//json解析
 	std::string out="";
+	std::string zjlx="";
 	sendMsg+=out.c_str();
+	std::string zfzff="";
 	CString reStr="";	
 
-	out=value["ZFZFF"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zfzff=value["ZFZFF"].asString();
+	if(zfzff.empty()!=0) //true 1 false 0
 	{
 		//资费支付方为空
 		reStr=RetMsg("014","资费支付方是必输项，不可为空");
@@ -1711,7 +1957,13 @@ CString Json_101006_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		sendMsg+=out.c_str();
+		if(zfzff!="1"&&zfzff!="2")
+		{
+			reStr=RetMsg("017","资费支付方：输入数据不存在");
+			//写日志
+			return reStr;
+		}
+		sendMsg+=zfzff.c_str();
 		sendMsg+="\r\n";
 	}
 	out=value["HCZHKHBZ"].asString();
@@ -1724,9 +1976,15 @@ CString Json_101006_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		if(0==strcmp(out.c_str(),"HCZHKH_BZ"))
+		if(out=="HCZHKH_BZ")
 		{
 			sendMsg+='&';
+		}
+		else
+		{
+			reStr=RetMsg("017","汇出账户卡号标志输入有误");
+			//写日志
+			return reStr;
 		}
 	}
 	out=value["SKDWMC"].asString();
@@ -1781,8 +2039,29 @@ CString Json_101006_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(atoi(out.c_str())<1||atoi(out.c_str())>3)
+		{
+			reStr=RetMsg("021","转账类型:输入数据不存在");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
+	}
+	if(0==strcmp(zfzff.c_str(),"2"))
+	{
+		out=value["XYH"].asString();
+		if(out.empty()!=0) //true 1 false 0
+		{
+			//协议号为空
+			reStr=RetMsg("018","协议号是必输项，不可为空");
+			//写日志
+			return reStr;
+		}
+		else
+		{
+			sendMsg+=out.c_str();
+			sendMsg+="\r\n";
+		}
 	}
 	out=value["FY"].asString();
 	if(out.empty()!=0) //true 1 false 0
@@ -1794,8 +2073,8 @@ CString Json_101006_SendMsg(Json::Value &value)
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 	}
-	out=value["HKRZJLX"].asString();
-	if(out.empty()!=0) //true 1 false 0
+	zjlx=value["HKRZJLX"].asString();
+	if(zjlx.empty()!=0) //true 1 false 0
 	{
 		//汇款人证件类型为空，直接跳到是否输入辅助证件
 		sendMsg+="\r\n";
@@ -1803,7 +2082,12 @@ CString Json_101006_SendMsg(Json::Value &value)
 	}
 	else
 	{
-		sendMsg+=out.c_str();
+		if(ZJLX.find(zjlx)==-1)
+		{
+			reStr=RetMsg("014","汇款人证件类型不存在");
+			return reStr;
+		}
+		sendMsg+=zjlx.c_str();
 		out=value["HKRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
 		{
@@ -1814,6 +2098,14 @@ CString Json_101006_SendMsg(Json::Value &value)
 		}
 		else
 		{
+			if(zjlx=="10")
+			{
+				if(out.length()!=18 && out.length()!=15)
+				{
+					reStr=RetMsg("016","身份证只能15位或18位");
+					return reStr;
+				}
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 			sendMsg+='&';
@@ -1850,11 +2142,43 @@ CString Json_101006_SendMsg(Json::Value &value)
 	}
 	else
 	{
+		if(out.length()<2)
+		{
+			reStr=RetMsg("025","代理人姓名：长度至少为2个字符(1个汉字两个字符)");
+			return reStr;
+		}
+		bool bIsNotDigit=FALSE;; 
+		char is_c_flag=0;
+		char szchinese[3] = {0}; 
+		for(int i=0;i<out.length();i++)
+		{
+			GtWriteTrace(EM_TraceDebug,"[%d]%c",i,out.at(i));
+			if(out.at(i)&0x80)
+			{
+				szchinese[is_c_flag]=out.at(i);
+				is_c_flag++;
+						
+				if(is_c_flag==2)
+				{
+					GtWriteTrace(EM_TraceDebug,"%s",szchinese);
+					memset(szchinese,0x00,sizeof(szchinese));
+					bIsNotDigit=TRUE;
+					is_c_flag=0;
+					break;
+				}
+			}
+		}
+		if(bIsNotDigit==FALSE)
+		{
+				//GtWriteTrace(EM_TraceDebug,"代理人姓名:不能全由数字组成");
+			reStr=RetMsg("018","代理人姓名:不能全由数字组成");
+			return reStr;
+		}
 		sendMsg+=out.c_str();
 		sendMsg+="\r\n";
 		sendMsg+="\r\n";
-		out=value["DLRZJLX"].asString();
-		if(out.empty()!=0) //true 1 false 0
+		zjlx=value["DLRZJLX"].asString();
+		if(zjlx.empty()!=0) //true 1 false 0
 		{
 			//证件类型为空
 			reStr=RetMsg("025","证件类型是必输项，不可为空");
@@ -1862,7 +2186,12 @@ CString Json_101006_SendMsg(Json::Value &value)
 		}
 		else 
 		{
-			sendMsg+=out.c_str();
+			if(ZJLX.find(zjlx)==-1)
+			{
+				reStr=RetMsg("014","汇款人证件类型不存在");
+				return reStr;
+			}
+			sendMsg+=zjlx.c_str();
 		}
 		out=value["DLRZJHM"].asString();
 		if(out.empty()!=0) //true 1 false 0
@@ -1873,6 +2202,14 @@ CString Json_101006_SendMsg(Json::Value &value)
 		}
 		else 
 		{
+			if(zjlx=="10")
+			{
+				if(out.length()!=18 && out.length()!=15)
+				{
+					reStr=RetMsg("016","身份证只能为18位");
+					return reStr;
+				}
+			}
 			sendMsg+=out.c_str();
 			sendMsg+="\r\n";
 			sendMsg+="\r\n";
@@ -1888,6 +2225,11 @@ CString Json_101006_SendMsg(Json::Value &value)
 		}
 		else 
 		{
+			if(out.length()<9)
+			{
+				reStr=RetMsg("027","联系电话:请输入至少9位字符(含区号)");
+				return reStr;
+			}
 			sendMsg+=out.c_str();
 		}
 	}
@@ -1947,7 +2289,6 @@ CString Json_970101_SendMsg(Json::Value &value)
 	reStr=RetMsg("000","发送成功");
 	return reStr;
 }
-
 int SendToWindows()
 {
 	// 自动填单交易进行处理
@@ -1969,6 +2310,7 @@ int SendToWindows()
 		else
 		{
 			strTmp=sendMsg;
+			sendMsg="";
 			GtWriteTrace(EM_TraceDebug,"sendMsg:[%s]",sendMsg);
 		}
 		int strlen = strTmp.GetLength();
@@ -2134,7 +2476,7 @@ CString JsonToSendMsg(string str)
 		else
 		{
 			//未知交易码
-			reStr=RetMsg("01","未知交易码");
+			reStr=RetMsg("001","未知交易码");
 			return reStr;
 		}		
 	}
@@ -2142,7 +2484,7 @@ CString JsonToSendMsg(string str)
 	{
 		GtWriteTrace(EM_TraceDebug,"error = [%s]", (reader.getFormatedErrorMessages()).c_str());
 		//解析失败
-		reStr=RetMsg("9999","解析失败");
+		reStr=RetMsg("999","解析失败");
 		return reStr;
 	}
 }

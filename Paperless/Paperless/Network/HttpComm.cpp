@@ -604,6 +604,9 @@ BOOL CALLBACK MyEnumProc(HWND hwnd, LPARAM lParam)
 	char sUrl[255] = {0};
 	LP_GET_WND_PARAM p_GetWndParam = (LP_GET_WND_PARAM)lParam;
 	ret = GetIEUrl(hwnd, sUrl, sizeof(sUrl)-1);
+	char sActWndNm[256] = {0};
+	::GetWindowTextA(hwnd, sActWndNm, sizeof(sActWndNm)-1);
+	GtWriteTrace(30, "%s:%d: sActWndNm=[%s]", __FUNCTION__, __LINE__, sActWndNm);
 	//GtWriteTrace(30, "%s:%d: ret=[%d], url=[%s]", __FUNCTION__, __LINE__, ret, sUrl);
 	if (ret == 0)
 	{
